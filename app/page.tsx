@@ -144,9 +144,7 @@ export default function Home() {
                     <div className="text-neon-green/60 text-xs">Image</div>
                   </div>
                 </div>
-              ) : (
-                <div className="text-4xl mb-4">{feature.icon}</div>
-              )}
+              ) : null}
               <h3 className="text-xl font-semibold mb-3 text-neon-pink">{feature.title}</h3>
               <p className="text-gray-400">{feature.description}</p>
             </motion.div>
