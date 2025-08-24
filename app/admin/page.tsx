@@ -127,7 +127,7 @@ export default function AdminPage() {
     <div className="min-h-screen p-6">
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
-        <Link href="/" className="text-2xl font-cyber font-bold neon-text">
+        <Link href="/dashboard" className="text-2xl font-cyber font-bold neon-text">
           ProposalAI
         </Link>
         <div className="text-white">

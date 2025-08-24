@@ -141,7 +141,7 @@ export default function Pricing() {
       {/* Header */}
       <header className="text-center mb-12">
         <div className="flex justify-between items-center mb-8">
-          <Link href="/" className="text-3xl font-cyber font-bold neon-text">
+          <Link href={isAuthenticated ? "/dashboard" : "/"} className="text-3xl font-cyber font-bold neon-text">
             ProposalAI
           </Link>
           <div className="flex items-center space-x-4">
