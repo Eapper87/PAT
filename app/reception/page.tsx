@@ -124,6 +124,11 @@ export default function ReceptionPage() {
               <p className="text-gray-400">
                 Connect with your seductive receptionist and let the magic begin...
               </p>
+              <div className="mt-6">
+                <Link href="/escorts" className="cyber-button text-lg px-8 py-4 bg-dark-700 border border-neon-pink text-neon-pink hover:bg-neon-pink hover:text-dark-900 transition-all duration-300">
+                  💋 Browse All Companions
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
