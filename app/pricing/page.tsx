@@ -1,12 +1,38 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 import { createCheckoutSession, createCreditPurchaseSession } from '@/lib/stripe'
 
 export default function Pricing() {
   const [loading, setLoading] = useState<string | null>(null)
+  const [user, setUser] = useState<any>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    checkUser()
+  }, [])
+
+  const checkUser = async () => {
+    try {
+      const { data: { user: authUser }, error } = await supabase.auth.getUser()
+      
+      if (error || !authUser) {
+        setIsAuthenticated(false)
+        setUser(null)
+      } else {
+        setIsAuthenticated(true)
+        setUser(authUser)
+      }
+    } catch (error) {
+      console.error('Error checking user:', error)
+      setIsAuthenticated(false)
+    }
+  }
 
   const plans = [
     {
@@ -45,10 +71,19 @@ export default function Pricing() {
   const handleSubscribe = async (priceId: string) => {
     if (!priceId) return
     
+    if (!isAuthenticated) {
+      router.push('/login?redirect=pricing')
+      return
+    }
+    
     setLoading('subscription')
     try {
-      const session = await createCheckoutSession(priceId)
-      window.location.href = session.url!
+      const session = await createCheckoutSession(priceId, user?.id)
+      if (session.url) {
+        window.location.href = session.url
+      } else {
+        console.error('No checkout URL received')
+      }
     } catch (error) {
       console.error('Error creating checkout session:', error)
     } finally {
@@ -57,10 +92,19 @@ export default function Pricing() {
   }
 
   const handleBuyCredits = async (credits: number, price: number) => {
+    if (!isAuthenticated) {
+      router.push('/login?redirect=pricing')
+      return
+    }
+    
     setLoading(`credits-${credits}`)
     try {
-      const session = await createCreditPurchaseSession(price)
-      window.location.href = session.url!
+      const session = await createCreditPurchaseSession(price, user?.id)
+      if (session.url) {
+        window.location.href = session.url
+      } else {
+        console.error('No checkout URL received')
+      }
     } catch (error) {
       console.error('Error creating checkout session:', error)
     } finally {
@@ -72,13 +116,56 @@ export default function Pricing() {
     <div className="min-h-screen p-6">
       {/* Header */}
       <header className="text-center mb-12">
-        <Link href="/" className="text-3xl font-cyber font-bold neon-text">
-          ProposalAI
-        </Link>
+        <div className="flex justify-between items-center mb-8">
+          <Link href="/" className="text-3xl font-cyber font-bold neon-text">
+            ProposalAI
+          </Link>
+          <div className="flex items-center space-x-4">
+            {isAuthenticated ? (
+              <>
+                <Link href="/dashboard" className="text-neon-green hover:text-neon-green/80 transition-colors">
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => supabase.auth.signOut()}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="text-gray-400 hover:text-white transition-colors">
+                  Login
+                </Link>
+                <Link href="/signup" className="cyber-button">
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+        
         <h1 className="text-4xl font-bold text-white mt-8 mb-4">Choose Your Fantasy Plan</h1>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
           Start with our free tier or unlock unlimited intimate AI conversations with our premium plans
         </p>
+        
+        {isAuthenticated && (
+          <div className="mt-4 p-3 bg-neon-green/20 border border-neon-green/40 rounded-lg">
+            <p className="text-neon-green text-sm">
+              Welcome back, {user?.email}! You're logged in and ready to subscribe.
+            </p>
+          </div>
+        )}
+        
+        {!isAuthenticated && (
+          <div className="mt-4 p-3 bg-neon-blue/20 border border-neon-blue/40 rounded-lg">
+            <p className="text-neon-blue text-sm">
+              Please <Link href="/login?redirect=pricing" className="underline hover:text-neon-blue/80">sign in</Link> to purchase credits or subscribe to plans.
+            </p>
+          </div>
+        )}
       </header>
 
       {/* Subscription Plans */}

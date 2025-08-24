@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 interface AuthFormProps {
   mode: 'signin' | 'signup'
@@ -17,6 +17,10 @@ export default function AuthForm({ mode, onSuccess }: AuthFormProps) {
   const [error, setError] = useState('')
   const [googleLoading, setGoogleLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Get redirect URL from query params
+  const redirectTo = searchParams.get('redirect') || '/dashboard'
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,7 +41,7 @@ export default function AuthForm({ mode, onSuccess }: AuthFormProps) {
 
         if (data.user) {
           // User profile creation is handled by database trigger
-          router.push('/dashboard?welcome=true')
+          router.push(redirectTo)
           onSuccess?.()
         }
       } else {
@@ -49,7 +53,7 @@ export default function AuthForm({ mode, onSuccess }: AuthFormProps) {
         if (error) throw error
 
         if (data.user) {
-          router.push('/dashboard')
+          router.push(redirectTo)
           onSuccess?.()
         }
       }

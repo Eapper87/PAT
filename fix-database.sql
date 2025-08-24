@@ -25,10 +25,20 @@ AND event_object_table = 'users';
 
 -- 4. Check RLS policies
 SELECT 'RLS Policies Check' as section;
-SELECT schemaname, tablename, rowsecurity, policyname, permissive, roles, cmd, qual
+SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual
 FROM pg_policies 
 WHERE schemaname = 'public' 
 ORDER BY tablename, policyname;
+
+-- Alternative RLS check (more compatible)
+SELECT 'RLS Status Check' as section;
+SELECT 
+    schemaname, 
+    tablename, 
+    CASE WHEN rowsecurity THEN 'enabled' ELSE 'disabled' END as rls_status
+FROM pg_tables 
+WHERE schemaname = 'public' 
+ORDER BY tablename;
 
 -- 5. Check if there are any users in auth.users
 SELECT 'Auth Users Check' as section;
