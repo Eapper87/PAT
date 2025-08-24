@@ -133,7 +133,7 @@ export default function ReceptionPage() {
               {
                 name: "Nova",
                 personality: "Quirky & Playful",
-                description: "Fun, unpredictable, and absolutely fabulous as your Gatekeeper",
+                description: "Fun, unpredictable, and absolutely fabulous as your vibrant Gatekeeper",
                 image: "/Nova.png",
                 route: "/call/receptionist/nova",
                 color: "border-neon-green"
