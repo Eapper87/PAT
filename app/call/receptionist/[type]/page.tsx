@@ -155,15 +155,16 @@ export default function ReceptionistCallPage() {
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Receptionist</h2>
             <div className="text-center">
               <div className="text-8xl mb-4">🖤</div>
-              <div className="text-neon-pink text-lg mb-4">Click the link below to talk to Raven</div>
-              <a 
-                href="https://elevenlabs.io/app/talk-to?agent_id=agent_5201k3e7ympbfm0vxskkqz73raa3"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-6 py-3 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors font-semibold"
-              >
-                🎤 Talk to Raven on ElevenLabs
-              </a>
+              <div className="text-neon-pink text-lg mb-4">Chat with Raven directly below</div>
+              <div className="w-full h-96 rounded-lg border border-neon-pink/40 overflow-hidden">
+                <iframe
+                  src="https://elevenlabs.io/app/talk-to?agent_id=agent_5201k3e7ympbfm0vxskkqz73raa3"
+                  className="w-full h-full border-0"
+                  title="Talk to Raven - AI Voice Chat"
+                  allow="microphone; camera"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+                />
+              </div>
             </div>
           </motion.div>
         )}
@@ -178,7 +179,7 @@ export default function ReceptionistCallPage() {
           >
             <div className="text-neon-pink text-lg mb-2">🎤 Voice-Only Experience</div>
             <p className="text-gray-400 text-sm">
-              Click the link above to open Raven's AI voice chat in a new tab. Experience her mysterious and seductive personality through voice interaction!
+              Use the voice chat interface above to talk directly with Raven. No text input needed - just speak naturally and experience her mysterious and seductive personality!
             </p>
           </motion.div>
         )}
