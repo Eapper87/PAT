@@ -82,7 +82,7 @@ CREATE TABLE users (
   id UUID REFERENCES auth.users(id) PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   role TEXT DEFAULT 'user' CHECK (role IN ('user', 'admin')),
-  credits INTEGER DEFAULT 5,
+  credits INTEGER DEFAULT 3,
   subscription_status TEXT DEFAULT 'inactive' CHECK (subscription_status IN ('active', 'inactive', 'cancelled')),
   stripe_customer_id TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
