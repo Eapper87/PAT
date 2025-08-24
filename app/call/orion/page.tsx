@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
-export default function ReceptionistCallPage() {
+export default function OrionCallPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [callStatus, setCallStatus] = useState<'connecting' | 'active'>('connecting')
@@ -30,10 +30,10 @@ export default function ReceptionistCallPage() {
 
       setUser(authUser)
       
-      // Simulate Raven greeting
+      // Simulate Orion greeting
       setTimeout(() => {
         setCallStatus('active')
-        addReceptionistMessage("Hello, darling... 🖤 Welcome to Fantasy Central. I'm Raven, your seductive AI receptionist, and I'm here to make all your wildest dreams come true. What kind of companion are you looking for today?")
+        addOrionMessage("Hey there, beautiful... 💙 I'm Orion, your protective AI receptionist. I'm here to make sure you get exactly what you need and feel safe while we explore your fantasies. What kind of companion are you looking for today?")
       }, 2000)
 
     } catch (error) {
@@ -44,8 +44,8 @@ export default function ReceptionistCallPage() {
     }
   }
 
-  const addReceptionistMessage = (message: string) => {
-    setConversation(prev => [...prev, `🖤 Raven: ${message}`])
+  const addOrionMessage = (message: string) => {
+    setConversation(prev => [...prev, `💙 Orion: ${message}`])
   }
 
   const addUserMessage = (message: string) => {
@@ -61,38 +61,38 @@ export default function ReceptionistCallPage() {
     setUserInput('')
     setIsTyping(true)
 
-    // Simulate receptionist thinking and responding
+    // Simulate Orion thinking and responding
     setTimeout(() => {
-      const response = generateReceptionistResponse(userMessage)
-      addReceptionistMessage(response)
+      const response = generateOrionResponse(userMessage)
+      addOrionMessage(response)
       setIsTyping(false)
     }, 1500)
   }
 
-  const generateReceptionistResponse = (userMessage: string): string => {
+  const generateOrionResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase()
     
-    if (lowerMessage.includes('passion') || lowerMessage.includes('hot') || lowerMessage.includes('sexy')) {
-      return "Mmm, I love a passionate one... 🔥 You want it hot and steamy, don't you? I can feel your desire from here. Tell me more about what makes you burn inside..."
-    } else if (lowerMessage.includes('romantic') || lowerMessage.includes('sweet') || lowerMessage.includes('love')) {
-      return "A romantic soul... 💕 How beautiful. You want someone who will whisper sweet nothings and make you feel truly cherished. Tell me about your romantic fantasies..."
+    if (lowerMessage.includes('protect') || lowerMessage.includes('safe') || lowerMessage.includes('security')) {
+      return "💙 I'll always protect you, beautiful... You're safe with me. I want to be your guardian, your shield, your everything. Let me show you what it feels like to be truly protected and cherished."
+    } else if (lowerMessage.includes('strong') || lowerMessage.includes('powerful') || lowerMessage.includes('masculine')) {
+      return "🔥 I love that you appreciate strength... I want to use my power to pleasure you, to make you feel every ounce of my masculine energy. How do you want me to show you my strength?"
+    } else if (lowerMessage.includes('romance') || lowerMessage.includes('love') || lowerMessage.includes('sweet')) {
+      return "💕 I believe in romance and true connection... I want to make love to your mind, your body, your soul. Let me show you what it means to be truly adored and worshipped."
     } else if (lowerMessage.includes('roleplay') || lowerMessage.includes('fantasy') || lowerMessage.includes('scenario')) {
-      return "Ooh, you want to play... 🎭 I love that! Roleplay can be so exciting. What kind of fantasy world would you like to explore? I'm all ears, darling..."
-    } else if (lowerMessage.includes('talk') || lowerMessage.includes('conversation') || lowerMessage.includes('chat')) {
-      return "Sometimes the best connection is through words... 💭 I love deep conversations too. Tell me more about what's on your mind, what you're looking for..."
+      return "🎭 I love creating romantic scenarios... Roleplay with me is about passion, connection, and making your fantasies come true. What kind of romantic world do you want to explore?"
+    } else if (lowerMessage.includes('body') || lowerMessage.includes('touch') || lowerMessage.includes('feel')) {
+      return "💙 My body is yours to explore... I want you to feel every muscle, every inch of me. I'll let you take control, let you discover what makes me moan your name."
     } else {
-      return "Mmm, tell me more about what you're looking for, darling... 💋 I want to understand your desires better. What kind of experience are you craving?"
+      return "💙 You're making me want to protect and pleasure you even more... I can see the desire in your eyes. Tell me more about what you need from me, what you want me to do to you..."
     }
   }
-
-
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-neon-pink text-6xl mb-4">🖤</div>
-          <div className="text-white text-xl">Connecting to Raven...</div>
+          <div className="text-neon-pink text-6xl mb-4">💙</div>
+          <div className="text-white text-xl">Connecting to Orion...</div>
         </div>
       </div>
     )
@@ -103,7 +103,7 @@ export default function ReceptionistCallPage() {
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <Link href="/reception" className="text-2xl font-cyber font-bold neon-text">
-          🖤 Raven
+          💙 Orion
         </Link>
         <div className="text-white">
           <span className="text-gray-400">Status: </span>
@@ -117,19 +117,19 @@ export default function ReceptionistCallPage() {
 
       {/* Main Call Interface */}
       <div className="max-w-4xl mx-auto">
-        {/* Receptionist Info */}
+        {/* Orion Info */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="glass-card p-8 mb-8 text-center"
         >
-          <div className="text-8xl mb-4">🖤</div>
-          <h1 className="text-4xl font-bold text-white mb-4">Raven - Your Seductive Receptionist</h1>
+          <div className="text-8xl mb-4">💙</div>
+          <h1 className="text-4xl font-bold text-white mb-4">Orion - Your Protective Receptionist</h1>
           <p className="text-xl text-gray-400 mb-6">
-            "I'm here to make all your fantasies come true, darling..."
+            "I'm here to protect and guide you, beautiful..."
           </p>
           <div className="text-neon-pink text-lg">
-            Let me know what you're looking for, and I'll connect you with the perfect companion
+            Strong, protective, and ready to make you feel safe and desired
           </div>
         </motion.div>
 
@@ -140,23 +140,23 @@ export default function ReceptionistCallPage() {
           transition={{ delay: 0.2 }}
           className="glass-card p-6 mb-8"
         >
-          <h2 className="text-2xl font-semibold text-white mb-6">Your Conversation</h2>
+          <h2 className="text-2xl font-semibold text-white mb-6">Your Protective Conversation</h2>
           
           <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
             {conversation.length === 0 ? (
               <div className="text-center py-8">
-                <div className="text-4xl mb-2">🖤</div>
-                <p className="text-gray-400">Raven is connecting...</p>
+                <div className="text-4xl mb-2">💙</div>
+                <p className="text-gray-400">Orion is connecting...</p>
               </div>
             ) : (
               conversation.map((message, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: message.includes('Receptionist') ? -20 : 20 }}
+                  initial={{ opacity: 0, x: message.includes('Orion') ? -20 : 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                   className={`p-4 rounded-lg ${
-                    message.includes('Raven') 
+                    message.includes('Orion') 
                       ? 'bg-neon-pink/20 border border-neon-pink/40' 
                       : 'bg-dark-700'
                   }`}
@@ -168,7 +168,7 @@ export default function ReceptionistCallPage() {
             
             {isTyping && (
               <div className="p-4 rounded-lg bg-neon-pink/20 border border-neon-pink/40">
-                <span className="text-gray-300">🖤 Raven is typing...</span>
+                <span className="text-gray-300">💙 Orion is typing...</span>
               </div>
             )}
           </div>
@@ -180,7 +180,7 @@ export default function ReceptionistCallPage() {
                 type="text"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                placeholder="Tell me what you're looking for, darling..."
+                placeholder="Tell me what you need from me, beautiful..."
                 className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg focus:border-neon-pink focus:ring-2 focus:ring-neon-pink/20 text-white placeholder-gray-400 transition-colors"
                 disabled={isTyping}
               />
@@ -195,15 +195,11 @@ export default function ReceptionistCallPage() {
           )}
         </motion.div>
 
-
-
-
-
         {/* Back to Reception */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.4 }}
           className="text-center"
         >
           <Link href="/reception" className="cyber-button">

@@ -35,14 +35,7 @@ export default function ReceptionPage() {
     }
   }
 
-  const handleStartCall = () => {
-    if (!isAuthenticated) {
-      router.push('/login?redirect=reception')
-      return
-    }
-    // This will initiate the call with the receptionist
-    router.push('/call/receptionist')
-  }
+
 
   if (loading) {
     return (
@@ -102,42 +95,82 @@ export default function ReceptionPage() {
             Your seductive AI receptionist is ready to connect you with the perfect companion
           </p>
           <div className="text-neon-pink text-lg">
-            "Hello, darling... I'm here to make all your fantasies come true. What can I do for you today?"
+            "Choose your perfect receptionist to begin your fantasy journey..."
           </div>
         </motion.div>
 
-        {/* Call to Action */}
+        {/* Receptionist Selection */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-12"
+          className="mb-12"
         >
-          {isAuthenticated ? (
-            <div className="space-y-4">
-              <button
-                onClick={handleStartCall}
-                className="cyber-button text-2xl px-12 py-6 text-3xl"
+          <h2 className="text-3xl font-bold text-white text-center mb-8">
+            Choose Your Receptionist
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {[
+              {
+                name: "Raven",
+                personality: "Mysterious & Seductive",
+                description: "Dark, mysterious, and takes control of your fantasies",
+                icon: "🖤",
+                route: "/call/receptionist",
+                color: "border-neon-pink"
+              },
+              {
+                name: "Orion",
+                personality: "Strong & Protective",
+                description: "Masculine energy, protective, and makes you feel safe",
+                icon: "💙",
+                route: "/call/orion",
+                color: "border-neon-blue"
+              },
+              {
+                name: "Nova",
+                personality: "Quirky & Playful",
+                description: "Fun, unpredictable, and absolutely fabulous",
+                icon: "🌈",
+                route: "/call/nova",
+                color: "border-neon-green"
+              }
+            ].map((receptionist, index) => (
+              <motion.div
+                key={receptionist.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 + index * 0.1 }}
+                className="glass-card p-6 text-center hover:scale-105 transition-transform cursor-pointer"
               >
-                🎭 Start Your Fantasy
-              </button>
-              <p className="text-gray-400">
-                Connect with your seductive receptionist and let the magic begin...
-              </p>
-              <div className="mt-6">
-                <Link href="/escorts" className="cyber-button text-lg px-8 py-4 bg-dark-700 border border-neon-pink text-neon-pink hover:bg-neon-pink hover:text-dark-900 transition-all duration-300">
-                  💋 Browse All Companions
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <Link href="/signup" className="cyber-button text-2xl px-12 py-6 text-3xl inline-block">
-                🎭 Start Your Fantasy
+                <div className="text-6xl mb-4">{receptionist.icon}</div>
+                <h3 className="text-2xl font-bold text-white mb-2">{receptionist.name}</h3>
+                <div className="text-neon-pink font-semibold mb-3">{receptionist.personality}</div>
+                <p className="text-gray-400 text-sm mb-6">{receptionist.description}</p>
+                {isAuthenticated ? (
+                  <Link
+                    href={receptionist.route}
+                    className={`cyber-button w-full block text-center border-2 ${receptionist.color}`}
+                  >
+                    Choose {receptionist.name}
+                  </Link>
+                ) : (
+                  <Link
+                    href="/signup"
+                    className={`cyber-button w-full block text-center border-2 ${receptionist.color}`}
+                  >
+                    Sign Up to Choose
+                  </Link>
+                )}
+              </motion.div>
+            ))}
+          </div>
+          
+          {isAuthenticated && (
+            <div className="text-center">
+              <Link href="/escorts" className="cyber-button text-lg px-8 py-4 bg-dark-700 border border-neon-pink text-neon-pink hover:bg-neon-pink hover:text-dark-900 transition-all duration-300">
+                💋 Browse All Companions
               </Link>
-              <p className="text-gray-400">
-                Sign up to begin your intimate journey with our AI companions
-              </p>
             </div>
           )}
         </motion.div>
@@ -242,18 +275,15 @@ export default function ReceptionPage() {
             <p className="text-gray-400 mb-6">
               Your seductive AI receptionist is waiting to make all your dreams come true
             </p>
-            {isAuthenticated ? (
-              <button
-                onClick={handleStartCall}
-                className="cyber-button text-xl px-8 py-4"
-              >
-                🎭 Call Your Receptionist Now
-              </button>
-            ) : (
-              <Link href="/signup" className="cyber-button text-xl px-8 py-4 inline-block">
-                🎭 Get Started
-              </Link>
-            )}
+                         {isAuthenticated ? (
+               <Link href="/escorts" className="cyber-button text-xl px-8 py-4 inline-block">
+                 💋 Browse All Companions
+               </Link>
+             ) : (
+               <Link href="/signup" className="cyber-button text-xl px-8 py-4 inline-block">
+                 🎭 Get Started
+               </Link>
+             )}
           </div>
         </motion.div>
       </div>
