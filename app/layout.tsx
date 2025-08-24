@@ -89,7 +89,7 @@ export default function RootLayout({
             <div className="max-w-6xl mx-auto">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div className="text-gray-400 text-sm">
-                  © 2024 ProposalAI. All rights reserved.
+                  © 2025 ProposalAI. All rights reserved.
                 </div>
                 <div className="flex items-center space-x-6 text-sm">
                   <Link href="/privacy" className="text-gray-400 hover:text-neon-pink transition-colors">
@@ -98,12 +98,6 @@ export default function RootLayout({
                   <Link href="/terms" className="text-gray-400 hover:text-neon-pink transition-colors">
                     Terms & Conditions
                   </Link>
-                  <a 
-                    href="mailto:support@proposalai.space" 
-                    className="text-gray-400 hover:text-neon-pink transition-colors"
-                  >
-                    Support
-                  </a>
                 </div>
               </div>
             </div>
