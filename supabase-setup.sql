@@ -6,6 +6,19 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =====================================================
+-- 0. CLEANUP EXISTING DATA (if running script multiple times)
+-- =====================================================
+
+-- Clear existing data to avoid conflicts
+TRUNCATE TABLE public.audit_logs CASCADE;
+TRUNCATE TABLE public.user_preferences CASCADE;
+TRUNCATE TABLE public.subscriptions CASCADE;
+TRUNCATE TABLE public.transactions CASCADE;
+TRUNCATE TABLE public.calls CASCADE;
+TRUNCATE TABLE public.agents CASCADE;
+TRUNCATE TABLE public.users CASCADE;
+
+-- =====================================================
 -- 1. USERS TABLE (extends Supabase auth.users)
 -- =====================================================
 
@@ -173,6 +186,24 @@ ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_preferences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist (to avoid conflicts)
+DROP POLICY IF EXISTS "Users can view own profile" ON public.users;
+DROP POLICY IF EXISTS "Users can update own profile" ON public.users;
+DROP POLICY IF EXISTS "Admins can view all users" ON public.users;
+DROP POLICY IF EXISTS "Anyone can view available agents" ON public.agents;
+DROP POLICY IF EXISTS "Admins can manage all agents" ON public.agents;
+DROP POLICY IF EXISTS "Users can view own calls" ON public.calls;
+DROP POLICY IF EXISTS "Users can create calls" ON public.calls;
+DROP POLICY IF EXISTS "Users can update own calls" ON public.calls;
+DROP POLICY IF EXISTS "Admins can view all calls" ON public.calls;
+DROP POLICY IF EXISTS "Users can view own transactions" ON public.transactions;
+DROP POLICY IF EXISTS "Admins can view all transactions" ON public.transactions;
+DROP POLICY IF EXISTS "Users can view own subscriptions" ON public.subscriptions;
+DROP POLICY IF EXISTS "Admins can view all subscriptions" ON public.subscriptions;
+DROP POLICY IF EXISTS "Users can view own preferences" ON public.user_preferences;
+DROP POLICY IF EXISTS "Users can manage own preferences" ON public.user_preferences;
+DROP POLICY IF EXISTS "Admins can view audit logs" ON public.audit_logs;
+
 -- Users table policies
 CREATE POLICY "Users can view own profile" ON public.users
     FOR SELECT USING (auth.uid() = id);
@@ -302,6 +333,15 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- =====================================================
 -- 10. TRIGGERS
 -- =====================================================
+
+-- Drop existing triggers if they exist (to avoid conflicts)
+DROP TRIGGER IF EXISTS update_users_updated_at ON public.users;
+DROP TRIGGER IF EXISTS update_agents_updated_at ON public.agents;
+DROP TRIGGER IF EXISTS update_calls_updated_at ON public.calls;
+DROP TRIGGER IF EXISTS update_transactions_updated_at ON public.transactions;
+DROP TRIGGER IF EXISTS update_subscriptions_updated_at ON public.subscriptions;
+DROP TRIGGER IF EXISTS update_user_preferences_updated_at ON public.user_preferences;
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 
 -- Update updated_at on all tables
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON public.users
