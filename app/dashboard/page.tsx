@@ -10,7 +10,6 @@ import { useRouter } from 'next/navigation'
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const [initiatingCall, setInitiatingCall] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -90,37 +89,7 @@ export default function Dashboard() {
     router.push('/')
   }
 
-  const initiateCall = async () => {
-    if (!user || user.credits <= 0) return
-    
-    setInitiatingCall(true)
-    
-    try {
-      // Create a new call record
-      const { data: call, error } = await supabase
-        .from('calls')
-        .insert([
-          {
-            user_id: user.id,
-            agent_id: 'receptionist-001', // Default receptionist
-            duration: 0,
-            cost: 0,
-            status: 'initiated'
-          }
-        ])
-        .select()
-        .single()
 
-      if (error) throw error
-
-      // Redirect to call interface
-      router.push(`/call/${call.id}`)
-    } catch (error) {
-      console.error('Error initiating call:', error)
-    } finally {
-      setInitiatingCall(false)
-    }
-  }
 
   if (loading) {
     return (
@@ -164,48 +133,25 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass-card p-6 text-center hover:scale-105 transition-transform cursor-pointer"
-          onClick={user.credits > 0 ? initiateCall : undefined}
-        >
-          <div className="text-4xl mb-4">🔥</div>
-          <h3 className="text-xl font-semibold mb-2 text-neon-pink">Start Fantasy</h3>
-          <p className="text-gray-400 mb-4">
-            {user.credits > 0 
-              ? 'Connect with your AI companion' 
-              : 'No credits remaining'
-            }
-          </p>
-          <button
-            disabled={user.credits <= 0 || initiatingCall}
-            className="cyber-button w-full disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {initiatingCall ? 'Connecting...' : 'Start Fantasy'}
-          </button>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
           className="glass-card p-6 text-center"
         >
-          <div className="text-4xl mb-4">💳</div>
-          <h3 className="text-xl font-semibold mb-2 text-neon-blue">Buy Credits</h3>
-          <p className="text-gray-400 mb-4">Purchase more call credits</p>
-          <Link href="/pricing" className="cyber-button w-full block text-center">
-            View Plans
+          <div className="text-4xl mb-4">💋</div>
+          <h3 className="text-xl font-semibold mb-2 text-neon-pink">Visit Reception</h3>
+          <p className="text-gray-400 mb-4">Meet your seductive AI receptionist</p>
+          <Link href="/reception" className="cyber-button w-full block text-center">
+            Go to Reception
           </Link>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2 }}
           className="glass-card p-6 text-center"
         >
           <div className="text-4xl mb-4">📊</div>
@@ -219,14 +165,14 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.3 }}
           className="glass-card p-6 text-center"
         >
-          <div className="text-4xl mb-4">💋</div>
-          <h3 className="text-xl font-semibold mb-2 text-neon-pink">Visit Reception</h3>
-          <p className="text-gray-400 mb-4">Meet your seductive AI receptionist</p>
-          <Link href="/reception" className="cyber-button w-full block text-center">
-            Go to Reception
+          <div className="text-4xl mb-4">💳</div>
+          <h3 className="text-xl font-semibold mb-2 text-neon-blue">Buy Credits</h3>
+          <p className="text-gray-400 mb-4">Purchase more call credits</p>
+          <Link href="/pricing" className="cyber-button w-full block text-center">
+            View Plans
           </Link>
         </motion.div>
       </div>
