@@ -64,18 +64,18 @@ export default function Home() {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
             <Link
-              href="/signup"
+              href="/reception"
               className="cyber-button text-lg px-8 py-4"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              Start Your Fantasy
+              🎭 Start Your Fantasy
             </Link>
             <Link
-              href="/demo"
+              href="/signup"
               className="px-8 py-4 border border-neon-blue text-neon-blue hover:bg-neon-blue hover:text-dark-900 transition-all duration-300 rounded-xl"
             >
-              Watch Demo
+              Sign Up
             </Link>
           </motion.div>
         </motion.div>

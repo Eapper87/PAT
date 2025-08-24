@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { createCheckoutSession, createCreditPurchaseSession } from '@/lib/stripe'
+
 
 export default function Pricing() {
   const [loading, setLoading] = useState<string | null>(null)
@@ -78,11 +78,23 @@ export default function Pricing() {
     
     setLoading('subscription')
     try {
-      const session = await createCheckoutSession(priceId, user?.id)
-      if (session.url) {
-        window.location.href = session.url
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId,
+          userId: user?.id
+        }),
+      })
+
+      const data = await response.json()
+      
+      if (data.url) {
+        window.location.href = data.url
       } else {
-        console.error('No checkout URL received')
+        console.error('No checkout URL received:', data.error)
       }
     } catch (error) {
       console.error('Error creating checkout session:', error)
@@ -99,11 +111,23 @@ export default function Pricing() {
     
     setLoading(`credits-${credits}`)
     try {
-      const session = await createCreditPurchaseSession(price, user?.id)
-      if (session.url) {
-        window.location.href = session.url
+      const response = await fetch('/api/stripe/create-credit-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: price,
+          userId: user?.id
+        }),
+      })
+
+      const data = await response.json()
+      
+      if (data.url) {
+        window.location.href = data.url
       } else {
-        console.error('No checkout URL received')
+        console.error('No checkout URL received:', data.error)
       }
     } catch (error) {
       console.error('Error creating checkout session:', error)
