@@ -6,7 +6,7 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 })
 
 export const createCheckoutSession = async (priceId: string, userId?: string) => {
-  let customerId = undefined
+  let customerId: string | undefined = undefined
   
   if (userId) {
     // Get or create Stripe customer for this user
@@ -37,7 +37,7 @@ export const createCheckoutSession = async (priceId: string, userId?: string) =>
     }
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const sessionParams: any = {
     payment_method_types: ['card'],
     line_items: [
       {
@@ -48,17 +48,22 @@ export const createCheckoutSession = async (priceId: string, userId?: string) =>
     mode: 'subscription',
     success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard?success=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing?canceled=true`,
-    customer: customerId,
     metadata: {
       user_id: userId
     }
-  })
+  }
+
+  if (customerId) {
+    sessionParams.customer = customerId
+  }
+
+  const session = await stripe.checkout.sessions.create(sessionParams)
 
   return session
 }
 
 export const createCreditPurchaseSession = async (amount: number, userId?: string) => {
-  let customerId = undefined
+  let customerId: string | undefined = undefined
   
   if (userId) {
     // Get or create Stripe customer for this user
@@ -89,7 +94,7 @@ export const createCreditPurchaseSession = async (amount: number, userId?: strin
     }
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const sessionParams: any = {
     payment_method_types: ['card'],
     line_items: [
       {
@@ -107,11 +112,16 @@ export const createCreditPurchaseSession = async (amount: number, userId?: strin
     mode: 'payment',
     success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard?success=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing?canceled=true`,
-    customer: customerId,
     metadata: {
       user_id: userId
     }
-  })
+  }
+
+  if (customerId) {
+    sessionParams.customer = customerId
+  }
+
+  const session = await stripe.checkout.sessions.create(sessionParams)
 
   return session
 }

@@ -174,6 +174,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Call initiation
 - Quick actions grid
 - Usage statistics
+- **Call History**: View and manage past conversations
 
 ### Call Interface (`/call/[id]`)
 - Real-time call management
@@ -181,16 +182,34 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Call controls (end, pause, mute)
 - Conversation transcript
 
+### Call History (`/history`)
+- Complete call history and analytics
+- Call duration and status tracking
+- Agent interaction history
+- Performance metrics and insights
+
 ### Pricing (`/pricing`)
 - Subscription plans
 - Credit packages
 - FAQ section
+- **Authentication-aware**: Maintains user login state
+- **Smart redirects**: Returns users to pricing after login
 
 ### Admin Panel (`/admin`)
 - AI agent management
 - User monitoring
 - Call analytics
 - System statistics
+
+## 🆕 Recent Updates
+
+### Latest Features (v1.1.0)
+- ✅ **Call History Page**: Complete user call history with analytics
+- ✅ **Enhanced Authentication**: Improved login flow with redirect handling
+- ✅ **Fixed Pricing Authentication**: Users no longer logged out when accessing pricing
+- ✅ **Improved Stripe Integration**: Better customer management and metadata handling
+- ✅ **TypeScript Improvements**: Fixed all build errors and type issues
+- ✅ **Better UX**: Seamless navigation between authenticated pages
 
 ## 🔧 Configuration
 
@@ -278,6 +297,32 @@ colors: {
 
 ## 🧪 Testing
 
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Build Errors**
+- Ensure all environment variables are set in `.env.local`
+- Run `npm run build` to check for TypeScript errors
+- Clear `.next` folder and reinstall dependencies if needed
+
+**Authentication Issues**
+- Check Supabase configuration and RLS policies
+- Verify environment variables are correct
+- Ensure database tables are properly set up
+
+**Stripe Integration**
+- Verify webhook endpoints are configured
+- Check Stripe keys are correct
+- Ensure webhook events are properly set up
+
+**Database Issues**
+- Run the database setup SQL in Supabase
+- Check RLS policies are enabled
+- Verify user triggers are working
+
+## 🧪 Testing
+
 ```bash
 # Run linting
 npm run lint
@@ -309,9 +354,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🚧 Roadmap
 
+### Completed ✅
+- [x] User authentication system
+- [x] AI agent management
+- [x] Call interface and management
+- [x] Stripe payment integration
+- [x] Call history and analytics
+- [x] Pricing page with authentication
+- [x] Admin dashboard
+
+### In Progress 🚧
 - [ ] WebRTC integration for real voice calls
 - [ ] AI agent training interface
 - [ ] Advanced analytics dashboard
+
+### Planned 🎯
 - [ ] Mobile app development
 - [ ] Multi-language support
 - [ ] Enterprise features

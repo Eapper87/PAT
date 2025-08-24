@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import AuthForm from '@/components/AuthForm'
 
 export default function Login() {
@@ -22,7 +23,9 @@ export default function Login() {
             <p className="text-gray-400 mt-2">Sign in to your account</p>
           </div>
 
-          <AuthForm mode="signin" />
+          <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+            <AuthForm mode="signin" />
+          </Suspense>
 
           <div className="mt-6 text-center">
             <p className="text-gray-400">

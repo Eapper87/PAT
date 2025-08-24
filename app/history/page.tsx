@@ -139,9 +139,9 @@ export default function HistoryPage() {
         </div>
         <div className="glass-card p-6 text-center">
           <div className="text-3xl font-bold text-neon-purple">
-            {calls.filter(call => call.status === 'ended').length}
+            {calls.filter(call => call.status === 'active').length}
           </div>
-          <div className="text-gray-400 text-sm">Ended</div>
+          <div className="text-gray-400 text-sm">Active</div>
         </div>
       </motion.div>
 
@@ -182,7 +182,8 @@ export default function HistoryPage() {
                       </h3>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                         call.status === 'completed' ? 'bg-green-500/20 text-green-400' :
-                        call.status === 'ended' ? 'bg-red-500/20 text-red-400' :
+                        call.status === 'failed' ? 'bg-red-500/20 text-red-400' :
+                        call.status === 'active' ? 'bg-blue-500/20 text-blue-400' :
                         'bg-yellow-500/20 text-yellow-400'
                       }`}>
                         {call.status}
