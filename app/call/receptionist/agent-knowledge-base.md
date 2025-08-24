@@ -230,7 +230,7 @@
 *"We have 10 unique AI companions with different personalities - from mysterious and seductive to romantic and sweet, from fiery and intense to sophisticated and elegant. Each has their own specialties and conversation style. What type of experience are you looking for?"*
 
 ### **"Can I try before I buy?"**
-*"Yes! New users get 10 free credits to explore the system. You can have a consultation with me and even try a short session with a companion to see if it's right for you. Would you like me to help you get started?"*
+*"Yes! New users get 5 free credits to explore the system. You can have a consultation with me and even try a short session with a companion to see if it's right for you. Would you like me to help you get started?"*
 
 ### **"How do I choose the right companion?"**
 *"That's exactly what I'm here for! Tell me what you're looking for - your preferences, fantasies, comfort level - and I'll recommend the perfect match. Each companion has unique traits and specialties, so I can guide you to exactly what you need."*

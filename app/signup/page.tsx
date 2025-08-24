@@ -38,7 +38,7 @@ export default function SignUp() {
 
           <div className="mt-6 p-4 bg-dark-700/50 rounded-lg">
             <p className="text-sm text-gray-400 text-center">
-              🎁 Get <span className="text-neon-green font-semibold">10 free fantasy minutes</span> when you sign up!
+              🎁 Get <span className="text-neon-green font-semibold">5 free fantasy minutes</span> when you sign up!
             </p>
           </div>
         </motion.div>

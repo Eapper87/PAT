@@ -38,8 +38,8 @@ export default function Pricing() {
     {
       name: 'Starter',
       price: 0,
-      credits: 10,
-      features: ['10 free credits', 'Basic AI agents', 'Email support'],
+              credits: 5,
+              features: ['5 free credits', 'Basic AI agents', 'Email support'],
       popular: false,
       priceId: null
     },

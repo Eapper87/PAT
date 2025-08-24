@@ -45,7 +45,7 @@ export default function Dashboard() {
                 {
                   id: authUser.id,
                   email: authUser.email,
-                  credits: 10,
+                  credits: 5,
                   subscription_status: 'inactive'
                 }
               ])
