@@ -155,7 +155,31 @@ export default function ReceptionistCallPage() {
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Receptionist</h2>
             <div className="text-center">
               <div className="text-8xl mb-4">🖤</div>
+              <div className="text-neon-pink text-lg mb-4">Click the link below to talk to Raven</div>
+              <a 
+                href="https://elevenlabs.io/app/talk-to?agent_id=agent_5201k3e7ympbfm0vxskkqz73raa3"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-6 py-3 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors font-semibold"
+              >
+                🎤 Talk to Raven on ElevenLabs
+              </a>
             </div>
+          </motion.div>
+        )}
+
+        {/* Voice-Only Notice for Raven */}
+        {type === 'raven' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="glass-card p-4 mb-8 text-center"
+          >
+            <div className="text-neon-pink text-lg mb-2">🎤 Voice-Only Experience</div>
+            <p className="text-gray-400 text-sm">
+              Click the link above to open Raven's AI voice chat in a new tab. Experience her mysterious and seductive personality through voice interaction!
+            </p>
           </motion.div>
         )}
 
