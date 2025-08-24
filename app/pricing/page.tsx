@@ -62,10 +62,10 @@ export default function Pricing() {
   ]
 
   const creditPackages = [
-    { credits: 50, price: 19, savings: 0 },
-    { credits: 100, price: 29, savings: 10 },
-    { credits: 250, price: 59, savings: 20 },
-    { credits: 500, price: 99, savings: 30 }
+    { credits: 50, price: 24, savings: 0 },
+    { credits: 100, price: 39, savings: 10 },
+    { credits: 250, price: 79, savings: 20 },
+    { credits: 500, price: 129, savings: 30 }
   ]
 
   const handleSubscribe = async (priceId: string) => {
@@ -261,20 +261,28 @@ export default function Pricing() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}
-              className="glass-card p-6 text-center hover:scale-105 transition-transform"
+              className="glass-card p-6 text-center hover:scale-105 transition-transform relative"
             >
-                        <div className="text-3xl font-bold text-neon-blue mb-2">{pkg.credits}</div>
-          <div className="text-gray-400 mb-2">Minutes</div>
+              {/* Coming Soon Overlay */}
+              <div className="absolute inset-0 bg-dark-900/80 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-neon-pink mb-2">Coming Soon</div>
+                  <div className="text-sm text-gray-300">Available in the future</div>
+                </div>
+              </div>
+              
+              <div className="text-3xl font-bold text-neon-blue mb-2">{pkg.credits}</div>
+              <div className="text-gray-400 mb-2">Minutes</div>
               <div className="text-2xl font-bold text-white mb-2">${pkg.price}</div>
               {pkg.savings > 0 && (
                 <div className="text-neon-green text-sm mb-4">Save {pkg.savings}%</div>
               )}
               <button
                 onClick={() => handleBuyCredits(pkg.credits, pkg.price)}
-                disabled={loading === `credits-${pkg.credits}`}
+                disabled={true}
                 className="cyber-button w-full disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading === `credits-${pkg.credits}` ? 'Processing...' : 'Buy Now'}
+                Coming Soon
               </button>
             </motion.div>
           ))}
