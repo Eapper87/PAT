@@ -178,17 +178,18 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Reception System (`/reception`)
 - **Multiple AI Receptionists**: Choose from 3 unique personalities
-- **Raven** 🖤: Mysterious & Seductive (Female)
-- **Orion** 💙: Strong & Protective (Male)
-- **Nova** 🌈: Quirky & Playful (Gender-fluid)
+- **Raven** 🖤: Mysterious & Seductive (Female) - ElevenLabs Voice Agent
+- **Orion** 💙: Strong & Protective (Male) - ElevenLabs Voice Agent  
+- **Nova** 🌈: Quirky & Playful (Gender-fluid) - ElevenLabs Voice Agent
 - Each receptionist has unique conversation styles and responses
+- **Voice Integration**: Direct ElevenLabs agent connections for immersive experiences
 
 ### AI Escort Companions
-- **10+ Specialized AI Companions** with unique personalities
+- **12 Specialized AI Companions** with unique personalities
 - **Female Companions**: Serena, Luna, Phoenix, Jade, Misty, Scarlet, Violet
-- **Male Companions**: Atlas, Kai
-- **Personality Types**: Mysterious, Romantic, Fiery, Sophisticated, Mystical, Confident, Playful, Strong, Protective
-- **Escorts Showcase** (`/escorts`): Browse all companions with filtering
+- **Male Companions**: Atlas, Kai, Zeus, Shadow, Blaze, Storm, Phantom
+- **Personality Types**: Mysterious, Romantic, Fiery, Sophisticated, Mystical, Confident, Playful, Strong, Protective, Dark, Intense, Wild, Elusive
+- **Escorts Showcase** (`/escorts`): Browse all companions with gender filtering
 
 ### Call Interfaces
 - **Receptionist Calls**: `/call/receptionist`, `/call/orion`, `/call/nova`
@@ -204,9 +205,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Performance metrics and insights
 
 ### Pricing (`/pricing`)
-- Subscription plans
-- Credit packages
-- FAQ section
+- **Updated Subscription Plans**:
+  - **Starter**: Free - 3 credits
+  - **Pro**: $29/month - 75 credits
+  - **Enterprise**: $99/month - 300 credits
+- Credit packages for one-time purchases
+- FAQ section with comprehensive information
 - **Authentication-aware**: Maintains user login state
 - **Smart redirects**: Returns users to pricing after login
 
@@ -218,7 +222,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🆕 Recent Updates
 
-### Latest Features (v1.4.0)
+### Latest Features (v1.5.0)
+- ✅ **Updated Pricing Structure**: Pro plan now 75 credits for $29, Enterprise plan 300 credits for $99
+- ✅ **ElevenLabs Integration**: Voice AI agents for all three receptionists (Raven, Orion, Nova)
+- ✅ **Enhanced AI Escort System**: Expanded to 12 AI companions (7 female, 5 male)
+- ✅ **Improved User Experience**: Better credit system and subscription management
+- ✅ **Streamlined Dashboard**: Cleaner navigation with Visit Reception, Fantasy History, Buy Credits
+
+### Previous Updates (v1.4.0)
 - ✅ **Multiple Receptionist System**: 3 unique AI receptionists with different personalities
 - ✅ **AI Escort Companions**: 10+ specialized AI companions with unique traits
 - ✅ **Escorts Showcase Page**: Browse and filter all available companions
@@ -392,15 +403,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Completed ✅
 - [x] User authentication system
 - [x] Multiple AI receptionist system (3 personalities)
-- [x] AI escort companion system (10+ personalities)
+- [x] AI escort companion system (12 personalities)
 - [x] Interactive conversation interfaces
 - [x] Call interface and management
-- [x] Stripe payment integration
+- [x] Stripe payment integration with updated pricing
 - [x] Call history and analytics
 - [x] Pricing page with authentication
 - [x] Admin dashboard
-- [x] Escorts showcase page
+- [x] Escorts showcase page with gender filtering
 - [x] Personality-driven AI responses
+- [x] ElevenLabs voice integration for receptionists
+- [x] Updated credit system (75/300 credits for Pro/Enterprise)
 
 ### In Progress 🚧
 - [ ] WebRTC integration for real voice calls
@@ -413,6 +426,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] Multi-language support
 - [ ] Enterprise features
 - [ ] Advanced AI personality customization
+- [ ] Enhanced voice AI capabilities
+- [ ] Real-time voice conversations
 
 ## 🙏 Acknowledgments
 
