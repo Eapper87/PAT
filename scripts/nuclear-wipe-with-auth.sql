@@ -15,23 +15,38 @@ SET session_replication_role = replica;
 -- Only uncomment if you want to clear everything including users
 -- DELETE FROM auth.users WHERE id != '00000000-0000-0000-0000-000000000000';
 
--- Clear user sessions (safely)
-DELETE FROM auth.sessions WHERE user_id IN (SELECT id FROM auth.users);
-
--- Clear user identities (safely)
-DELETE FROM auth.identities WHERE user_id IN (SELECT id FROM auth.users);
-
--- Clear user refresh tokens (safely)
-DELETE FROM auth.refresh_tokens WHERE user_id IN (SELECT id FROM auth.users);
-
--- Clear user factors (safely)
-DELETE FROM auth.mfa_factors WHERE user_id IN (SELECT id FROM auth.users);
-
--- Clear user challenges (safely)
-DELETE FROM auth.mfa_challenges WHERE user_id IN (SELECT id FROM auth.users);
-
--- Clear user audit logs (safely)
-DELETE FROM auth.audit_log_entries WHERE user_id IN (SELECT id FROM auth.users);
+-- Safely clear auth-related data with proper type handling
+DO $$
+DECLARE
+    user_count INTEGER;
+BEGIN
+    -- Get user count first
+    SELECT COUNT(*) INTO user_count FROM auth.users;
+    
+    IF user_count > 0 THEN
+        -- Clear user sessions (safely)
+        DELETE FROM auth.sessions WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        
+        -- Clear user identities (safely)
+        DELETE FROM auth.identities WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        
+        -- Clear user refresh tokens (safely)
+        DELETE FROM auth.refresh_tokens WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        
+        -- Clear user factors (safely)
+        DELETE FROM auth.mfa_factors WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        
+        -- Clear user challenges (safely)
+        DELETE FROM auth.mfa_challenges WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        
+        -- Clear user audit logs (safely)
+        DELETE FROM auth.audit_log_entries WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        
+        RAISE NOTICE 'Cleared auth data for % users', user_count;
+    ELSE
+        RAISE NOTICE 'No users found to clear auth data for';
+    END IF;
+END $$;
 
 -- =====================================================
 -- STEP 2: DROP ALL CUSTOM SCHEMAS
