@@ -68,54 +68,73 @@ export default function ReceptionistCallPage() {
     if (type === 'raven') {
       console.log('🖤 Setting up ElevenLabs widget for Raven...')
       
-      // Simple approach - just inject the embed snippet
-      const container = document.getElementById('elevenlabs-convai-widget')
-      if (container) {
-        // Clear the container
-        container.innerHTML = ''
+      // Initialize widget with multiple retry attempts
+      let retryCount = 0
+      const maxRetries = 3
+      
+      const initializeWidget = () => {
+        console.log(`🔄 Attempt ${retryCount + 1} to initialize widget...`)
         
-        // Create the embed element
-        const embedElement = document.createElement('elevenlabs-convai')
-        embedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
-        
-        // Add the embed element
-        container.appendChild(embedElement)
-        
-        // Add the script tag
-        const script = document.createElement('script')
-        script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
-        script.async = true
-        script.type = 'text/javascript'
-        
-        // Add script to container
-        container.appendChild(script)
-        
-        console.log('✅ ElevenLabs embed snippet added')
-        updateWidgetStatus('Embed snippet added - widget should appear')
-        
-        // Auto-retry if widget doesn't appear after a delay
-        setTimeout(() => {
-          const widget = container.querySelector('elevenlabs-convai')
-          if (!widget || widget.children.length === 0) {
-            console.log('🔄 Widget not appearing, auto-retrying...')
-            updateWidgetStatus('Auto-retrying...')
+        const container = document.getElementById('elevenlabs-convai-widget')
+        if (container) {
+          // Clear the container
+          container.innerHTML = ''
+          
+          // Create the embed element
+          const embedElement = document.createElement('elevenlabs-convai')
+          embedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
+          
+          // Add the embed element
+          container.appendChild(embedElement)
+          
+          // Add the script tag
+          const script = document.createElement('script')
+          script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
+          script.async = true
+          script.type = 'text/javascript'
+          
+          // Add script to container
+          container.appendChild(script)
+          
+          console.log('✅ ElevenLabs embed snippet added')
+          updateWidgetStatus(`Attempt ${retryCount + 1} - Embed snippet added`)
+          
+          // Check if widget appeared after a delay
+          setTimeout(() => {
+            const widget = container.querySelector('elevenlabs-convai')
+            const hasWidgetContent = widget && widget.children.length > 0
             
-            // Clear and re-inject
-            container.innerHTML = ''
-            const newEmbedElement = document.createElement('elevenlabs-convai')
-            newEmbedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
-            container.appendChild(newEmbedElement)
+            // Also check for ElevenLabs-specific content
+            const hasElevenLabsContent = container.innerHTML.includes('elevenlabs') || 
+                                       container.innerHTML.includes('convai') ||
+                                       container.querySelector('[class*="elevenlabs"]') ||
+                                       container.querySelector('[class*="convai"]')
             
-            const newScript = document.createElement('script')
-            newScript.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
-            newScript.async = true
-            newScript.type = 'text/javascript'
-            container.appendChild(newScript)
-            
-            updateWidgetStatus('Auto-retry completed')
-          }
-        }, 5000) // Wait 5 seconds before auto-retry
+            if (!hasWidgetContent && !hasElevenLabsContent && retryCount < maxRetries) {
+              retryCount++
+              console.log(`🔄 Widget not appearing, retry ${retryCount}/${maxRetries}...`)
+              updateWidgetStatus(`Retry ${retryCount}/${maxRetries} - Widget not appearing`)
+              
+              // Wait a bit before retrying
+              setTimeout(initializeWidget, 2000)
+            } else if (!hasWidgetContent && !hasElevenLabsContent && retryCount >= maxRetries) {
+              console.log('🔄 Max retries reached, attempting page reload...')
+              updateWidgetStatus('Max retries reached - reloading page...')
+              
+              // Final fallback: reload the page
+              setTimeout(() => {
+                window.location.reload()
+              }, 1000)
+            } else {
+              console.log('✅ Widget successfully initialized!')
+              updateWidgetStatus('Widget ready - speak to Raven!')
+            }
+          }, 3000) // Wait 3 seconds to check if widget appeared
+        }
       }
+      
+      // Start initialization
+      initializeWidget()
     }
   }, [type])
 
@@ -314,6 +333,20 @@ export default function ReceptionistCallPage() {
                   <div>Container: elevenlabs-convai-widget</div>
                   <div>Script Status: <span id="script-status">Loading...</span></div>
                   <div>Widget Status: <span id="widget-status">Initializing...</span></div>
+                </div>
+                
+                {/* Manual Reload Button */}
+                <div className="mt-3 text-center">
+                  <button
+                    onClick={() => {
+                      console.log('🔄 Manual page reload requested...')
+                      updateWidgetStatus('Manual reload...')
+                      window.location.reload()
+                    }}
+                    className="px-4 py-2 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors text-sm"
+                  >
+                    🔄 Reload Page
+                  </button>
                 </div>
               </div>
             </div>
