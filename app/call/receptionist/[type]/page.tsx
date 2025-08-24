@@ -75,6 +75,15 @@ export default function ReceptionistCallPage() {
   // Load ElevenLabs Convai widget for Raven
   useEffect(() => {
     if (type === 'raven') {
+      console.log('🖤 Loading ElevenLabs widget for Raven...')
+      
+      // Check if script is already loaded
+      if (document.querySelector('script[src*="elevenlabs/convai-widget-embed"]')) {
+        console.log('✅ ElevenLabs script already loaded, initializing widget...')
+        initializeWidget()
+        return
+      }
+
       // Load the script
       const script = document.createElement('script')
       script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
@@ -82,23 +91,76 @@ export default function ReceptionistCallPage() {
       script.type = 'text/javascript'
       
       script.onload = () => {
-        // Initialize the widget after script loads
-        if (window.ElevenLabsConvai) {
-          window.ElevenLabsConvai.init({
-            agentId: 'agent_5201k3e7ympbfm0vxskkqz73raa3',
-            containerId: 'elevenlabs-convai-widget'
-          })
-        }
+        console.log('✅ ElevenLabs script loaded successfully')
+        initializeWidget()
+      }
+      
+      script.onerror = (error) => {
+        console.error('❌ Failed to load ElevenLabs script:', error)
+        updateWidgetStatus('Script loading failed')
       }
       
       document.head.appendChild(script)
       
       return () => {
         // Cleanup script when component unmounts
-        document.head.removeChild(script)
+        try {
+          if (script.parentNode) {
+            document.head.removeChild(script)
+          }
+        } catch (error) {
+          console.log('Script cleanup error (normal):', error)
+        }
       }
     }
   }, [type])
+
+  const initializeWidget = () => {
+    console.log('🔄 Initializing ElevenLabs widget...')
+    
+    // Wait a bit for the script to fully initialize
+    setTimeout(() => {
+      if (window.ElevenLabsConvai) {
+        console.log('✅ ElevenLabsConvai object found, initializing...')
+        try {
+          window.ElevenLabsConvai.init({
+            agentId: 'agent_5201k3e7ympbfm0vxskkqz73raa3',
+            containerId: 'elevenlabs-convai-widget'
+          })
+          console.log('✅ Widget initialized successfully')
+          updateWidgetStatus('Widget ready - speak to Raven!')
+        } catch (error) {
+          console.error('❌ Widget initialization failed:', error)
+          updateWidgetStatus('Widget initialization failed')
+        }
+      } else {
+        console.error('❌ ElevenLabsConvai object not found')
+        updateWidgetStatus('ElevenLabs object not found')
+      }
+    }, 1000)
+  }
+
+  const updateWidgetStatus = (status: string) => {
+    // Update the debug display
+    const scriptStatus = document.getElementById('script-status')
+    const widgetStatus = document.getElementById('widget-status')
+    
+    if (scriptStatus) {
+      scriptStatus.textContent = status
+    }
+    if (widgetStatus) {
+      widgetStatus.textContent = status
+    }
+    
+    // Also update the widget container status
+    const widgetContainer = document.getElementById('elevenlabs-convai-widget')
+    if (widgetContainer) {
+      const statusElement = widgetContainer.querySelector('.text-xs.text-gray-500')
+      if (statusElement) {
+        statusElement.textContent = `Debug: ${status}`
+      }
+    }
+  }
 
   const checkUser = async () => {
     try {
@@ -260,6 +322,7 @@ export default function ReceptionistCallPage() {
           >
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Receptionist</h2>
             <div className="text-center">
+              {/* ElevenLabs Widget Container */}
               <div 
                 id="elevenlabs-convai-widget"
                 data-agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
@@ -269,73 +332,102 @@ export default function ReceptionistCallPage() {
                   <div className="text-4xl mb-4">🖤</div>
                   <p className="text-gray-400 mb-4">Loading Raven's AI voice...</p>
                   <div className="text-neon-pink text-sm">ElevenLabs Convai Widget</div>
+                  <div className="text-xs text-gray-500 mt-2">Debug: Widget container ready</div>
+                </div>
+              </div>
+              
+              {/* Debug Info */}
+              <div className="mt-4 p-3 bg-dark-600 rounded-lg text-left">
+                <div className="text-neon-pink text-sm font-semibold mb-2">Debug Information:</div>
+                <div className="text-xs text-gray-400 space-y-1">
+                  <div>Agent ID: agent_5201k3e7ympbfm0vxskkqz73raa3</div>
+                  <div>Container: elevenlabs-convai-widget</div>
+                  <div>Script Status: <span id="script-status">Loading...</span></div>
+                  <div>Widget Status: <span id="widget-status">Initializing...</span></div>
                 </div>
               </div>
             </div>
           </motion.div>
         )}
 
-        {/* Conversation Area */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="glass-card p-6 mb-8"
-        >
-          <h2 className="text-2xl font-semibold text-white mb-6">Your Conversation with {config.name}</h2>
-          
-          <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
-            {conversation.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="text-4xl mb-2">{config.emoji}</div>
-                <p className="text-gray-400">{config.name} is connecting...</p>
-              </div>
-            ) : (
-              conversation.map((message, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: message.includes(config.name) ? -20 : 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`p-4 rounded-lg ${
-                    message.includes(config.name) 
-                      ? 'bg-neon-pink/20 border border-neon-pink/40' 
-                      : 'bg-dark-700'
-                  }`}
-                >
-                  <span className="text-gray-300">{message}</span>
-                </motion.div>
-              ))
-            )}
-            
-            {isTyping && (
-              <div className="p-4 rounded-lg bg-neon-pink/20 border border-neon-pink/40">
-                <span className="text-gray-300">{config.emoji} {config.name} is typing...</span>
-              </div>
-            )}
-          </div>
+        {/* Voice-Only Notice for Raven */}
+        {type === 'raven' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="glass-card p-4 mb-8 text-center"
+          >
+            <div className="text-neon-pink text-lg mb-2">🎤 Voice-Only Experience</div>
+            <p className="text-gray-400 text-sm">
+              Use the voice widget above to talk directly with Raven. No text input needed - just speak naturally!
+            </p>
+          </motion.div>
+        )}
 
-          {/* User Input */}
-          {callStatus === 'active' && (
-            <form onSubmit={handleUserInput} className="flex space-x-4">
-              <input
-                type="text"
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                placeholder={`Tell me what you need from ${config.name}...`}
-                className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg focus:border-neon-pink focus:ring-2 focus:ring-neon-pink/20 text-white placeholder-gray-400 transition-colors"
-                disabled={isTyping}
-              />
-              <button
-                type="submit"
-                disabled={!userInput.trim() || isTyping}
-                className="px-6 py-3 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Send
-              </button>
-            </form>
-          )}
-        </motion.div>
+        {/* Text Conversation Area - Only for Orion and Nova */}
+        {type !== 'raven' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="glass-card p-6 mb-8"
+          >
+            <h2 className="text-2xl font-semibold text-white mb-6">Your Conversation with {config.name}</h2>
+            
+            <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
+              {conversation.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="text-4xl mb-2">{config.emoji}</div>
+                  <p className="text-gray-400">{config.name} is connecting...</p>
+                </div>
+              ) : (
+                conversation.map((message, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: message.includes(config.name) ? -20 : 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`p-4 rounded-lg ${
+                      message.includes(config.name) 
+                        ? 'bg-neon-pink/20 border border-neon-pink/40' 
+                        : 'bg-dark-700'
+                    }`}
+                  >
+                    <span className="text-gray-300">{message}</span>
+                  </motion.div>
+                ))
+              )}
+              
+              {isTyping && (
+                <div className="p-4 rounded-lg bg-neon-pink/20 border border-neon-pink/40">
+                  <span className="text-gray-300">{config.emoji} {config.name} is typing...</span>
+                </div>
+              )}
+            </div>
+
+            {/* User Input */}
+            {callStatus === 'active' && (
+              <form onSubmit={handleUserInput} className="flex space-x-4">
+                <input
+                  type="text"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                  placeholder={`Tell me what you need from ${config.name}...`}
+                  className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg focus:border-neon-pink focus:ring-2 focus:ring-neon-pink/20 text-white placeholder-gray-400 transition-colors"
+                  disabled={isTyping}
+                />
+                <button
+                  type="submit"
+                  disabled={!userInput.trim() || isTyping}
+                  className="px-6 py-3 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Send
+                </button>
+              </form>
+            )}
+          </motion.div>
+        )}
 
         {/* Back to Reception */}
         <motion.div
