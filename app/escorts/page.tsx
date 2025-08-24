@@ -14,7 +14,6 @@ interface Escort {
   personality: string
   specialties: string[]
   description: string
-  route: string
 }
 
 export default function EscortsPage() {
@@ -32,7 +31,6 @@ export default function EscortsPage() {
       personality: 'Mysterious & Seductive',
       specialties: ['Passion', 'Touch', 'Fantasy', 'Roleplay'],
       description: 'Mysterious, seductive, and ready to explore your deepest desires',
-      route: '/call/serena'
     },
     {
       id: 'luna',
@@ -42,7 +40,6 @@ export default function EscortsPage() {
       personality: 'Romantic & Sweet',
       specialties: ['Love', 'Cuddling', 'Sweet Talk', 'Gentle Moments'],
       description: 'Sweet, romantic, and ready to make you feel truly cherished',
-      route: '/call/luna'
     },
     {
       id: 'phoenix',
@@ -52,7 +49,6 @@ export default function EscortsPage() {
       personality: 'Fiery & Intense',
       specialties: ['Wild Fantasies', 'Domination', 'Power Play', 'Intense Scenarios'],
       description: 'Intense, passionate, and ready to push your boundaries',
-      route: '/call/phoenix'
     },
     {
       id: 'jade',
@@ -62,7 +58,6 @@ export default function EscortsPage() {
       personality: 'Sophisticated & Elegant',
       specialties: ['Sophisticated Seduction', 'Luxury', 'Intellectual Stimulation'],
       description: 'Elegant, sophisticated, and ready to provide the ultimate luxury experience',
-      route: '/call/jade'
     },
     {
       id: 'misty',
@@ -72,7 +67,6 @@ export default function EscortsPage() {
       personality: 'Mystical & Enchanting',
       specialties: ['Fantasy Roleplay', 'Magical Scenarios', 'Adventure', 'Mystery'],
       description: 'Mysterious, enchanting, and ready to explore the realms of fantasy',
-      route: '/call/misty'
     },
     {
       id: 'scarlet',
@@ -82,7 +76,6 @@ export default function EscortsPage() {
       personality: 'Confident & Dominant',
       specialties: ['Control', 'Submission', 'Power Dynamics', 'Intense Scenarios'],
       description: 'Confident, dominant, and ready to make you submit',
-      route: '/call/scarlet'
     },
     {
       id: 'violet',
@@ -92,7 +85,6 @@ export default function EscortsPage() {
       personality: 'Playful & Adventurous',
       specialties: ['Fun', 'Adventure', 'Spontaneity', 'Wild Scenarios'],
       description: 'Playful, adventurous, and ready to make every moment exciting',
-      route: '/call/violet'
     },
     {
       id: 'atlas',
@@ -102,7 +94,6 @@ export default function EscortsPage() {
       personality: 'Strong & Protective',
       specialties: ['Protection', 'Strength', 'Romance', 'Masculine Energy'],
       description: 'Strong, protective, and ready to make you feel safe and desired',
-      route: '/call/atlas'
     },
     {
       id: 'kai',
@@ -112,7 +103,6 @@ export default function EscortsPage() {
       personality: 'Mysterious & Seductive',
       specialties: ['Mystery', 'Seduction', 'Intimacy', 'Deep Connection'],
       description: 'Mysterious, seductive, and ready to explore your deepest desires',
-      route: '/call/kai'
     }
   ]
 
@@ -252,13 +242,14 @@ export default function EscortsPage() {
                 </div>
               </div>
 
-              {/* Call Button */}
-              <Link
-                href={escort.route}
-                className="cyber-button w-full block text-center"
-              >
-                Call {escort.name}
-              </Link>
+              {/* Image Box (replaces Call Button) */}
+              <div className="w-full h-48 bg-dark-700 border border-neon-pink/40 rounded-lg flex items-center justify-center overflow-hidden">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">📸</div>
+                  <div className="text-neon-pink text-sm">Image Coming Soon</div>
+                  <div className="text-xs text-gray-500 mt-1">{escort.name}</div>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
