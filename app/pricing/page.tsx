@@ -62,10 +62,10 @@ export default function Pricing() {
   ]
 
   const creditPackages = [
-    { credits: 50, price: 24, savings: 0 },
-    { credits: 100, price: 39, savings: 10 },
-    { credits: 250, price: 79, savings: 20 },
-    { credits: 500, price: 129, savings: 30 }
+    { credits: 50, price: 39, savings: 0 },
+    { credits: 100, price: 59, savings: 10 },
+    { credits: 250, price: 129, savings: 20 },
+    { credits: 500, price: 199, savings: 30 }
   ]
 
   const handleSubscribe = async (priceId: string) => {
