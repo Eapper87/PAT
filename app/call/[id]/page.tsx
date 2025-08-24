@@ -92,12 +92,21 @@ export default function CallPage() {
         .eq('id', call.id)
 
       // Update user credits
-      await supabase
+      // First get current credits, then update
+      const { data: currentUser } = await supabase
         .from('users')
-        .update({
-          credits: supabase.sql`credits - ${Math.ceil(callDuration / 60)}`
-        })
+        .select('credits')
         .eq('id', call.user_id)
+        .single()
+
+      if (currentUser) {
+        await supabase
+          .from('users')
+          .update({
+            credits: currentUser.credits - Math.ceil(callDuration / 60)
+          })
+          .eq('id', call.user_id)
+      }
 
     } catch (error) {
       console.error('Error ending call:', error)

@@ -92,13 +92,22 @@ async function handleSubscriptionCreated(session: any) {
   }
 
   // Update user subscription status and credits
-  await supabase
+  // First get current credits, then update
+  const { data: currentUser } = await supabase
     .from('users')
-    .update({
-      subscription_status: 'active',
-      credits: supabase.sql`credits + ${credits}`
-    })
+    .select('credits')
     .eq('id', userId)
+    .single()
+
+  if (currentUser) {
+    await supabase
+      .from('users')
+      .update({
+        subscription_status: 'active',
+        credits: currentUser.credits + credits
+      })
+      .eq('id', userId)
+  }
 
   // Create transaction record
   await supabase
@@ -124,12 +133,21 @@ async function handleCreditPurchase(session: any) {
   }
 
   // Update user credits
-  await supabase
+  // First get current credits, then update
+  const { data: currentUser } = await supabase
     .from('users')
-    .update({
-      credits: supabase.sql`credits + ${amount}`
-    })
+    .select('credits')
     .eq('id', userId)
+    .single()
+
+  if (currentUser) {
+    await supabase
+      .from('users')
+      .update({
+        credits: currentUser.credits + amount
+      })
+      .eq('id', userId)
+  }
 
   // Create transaction record
   await supabase
@@ -212,12 +230,21 @@ async function handleInvoicePaymentSucceeded(invoice: any) {
 
     if (user) {
       // Add monthly credits
-      await supabase
+      // First get current credits, then update
+      const { data: currentUser } = await supabase
         .from('users')
-        .update({
-          credits: supabase.sql`credits + ${credits}`
-        })
+        .select('credits')
         .eq('id', user.id)
+        .single()
+
+      if (currentUser) {
+        await supabase
+          .from('users')
+          .update({
+            credits: currentUser.credits + credits
+          })
+          .eq('id', user.id)
+      }
 
       // Create transaction record
       await supabase
