@@ -92,6 +92,29 @@ export default function ReceptionistCallPage() {
         
         console.log('✅ ElevenLabs embed snippet added')
         updateWidgetStatus('Embed snippet added - widget should appear')
+        
+        // Auto-retry if widget doesn't appear after a delay
+        setTimeout(() => {
+          const widget = container.querySelector('elevenlabs-convai')
+          if (!widget || widget.children.length === 0) {
+            console.log('🔄 Widget not appearing, auto-retrying...')
+            updateWidgetStatus('Auto-retrying...')
+            
+            // Clear and re-inject
+            container.innerHTML = ''
+            const newEmbedElement = document.createElement('elevenlabs-convai')
+            newEmbedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
+            container.appendChild(newEmbedElement)
+            
+            const newScript = document.createElement('script')
+            newScript.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
+            newScript.async = true
+            newScript.type = 'text/javascript'
+            container.appendChild(newScript)
+            
+            updateWidgetStatus('Auto-retry completed')
+          }
+        }, 5000) // Wait 5 seconds before auto-retry
       }
     }
   }, [type])
@@ -265,7 +288,7 @@ export default function ReceptionistCallPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="glass-card p-6 mb-8"
+            className="glass-card p-4 md:p-6 mb-8"
           >
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Receptionist</h2>
             <div className="text-center">
@@ -273,7 +296,7 @@ export default function ReceptionistCallPage() {
               <div 
                 id="elevenlabs-convai-widget"
                 data-agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
-                className="w-full h-96 bg-dark-700 rounded-lg border border-neon-pink/40 flex items-center justify-center"
+                className="w-full h-96 bg-dark-700 rounded-lg border border-neon-pink/40 flex items-center justify-center overflow-hidden"
               >
                 <div className="text-center">
                   <div className="text-4xl mb-4">🖤</div>
@@ -291,37 +314,6 @@ export default function ReceptionistCallPage() {
                   <div>Container: elevenlabs-convai-widget</div>
                   <div>Script Status: <span id="script-status">Loading...</span></div>
                   <div>Widget Status: <span id="widget-status">Initializing...</span></div>
-                </div>
-                
-                {/* Manual Retry Button */}
-                <div className="mt-3 text-center">
-                  <button
-                    onClick={() => {
-                      console.log('🔄 Manual retry requested...')
-                      updateWidgetStatus('Manual retry...')
-                      
-                      // Re-inject the embed snippet
-                      const container = document.getElementById('elevenlabs-convai-widget')
-                      if (container) {
-                        container.innerHTML = ''
-                        
-                        const embedElement = document.createElement('elevenlabs-convai')
-                        embedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
-                        container.appendChild(embedElement)
-                        
-                        const script = document.createElement('script')
-                        script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
-                        script.async = true
-                        script.type = 'text/javascript'
-                        container.appendChild(script)
-                        
-                        updateWidgetStatus('Embed snippet re-injected')
-                      }
-                    }}
-                    className="px-4 py-2 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors text-sm"
-                  >
-                    🔄 Retry Widget
-                  </button>
                 </div>
               </div>
             </div>
