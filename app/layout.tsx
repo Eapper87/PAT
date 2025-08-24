@@ -17,6 +17,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          defer
+          data-website-id="68a784dbb17bcd7524d86fd4"
+          data-domain="proposalai.space"
+          src="https://datafa.st/js/script.js">
+        </script>
+      </head>
       <body className={inter.className}>
         <div className="min-h-screen gradient-bg">
           {children}
