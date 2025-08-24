@@ -35,10 +35,49 @@ export default function Dashboard() {
 
       if (error) {
         console.error('Error fetching user profile:', error)
-        return
-      }
+        
+        // If profile doesn't exist, try to create it
+        if (error.code === 'PGRST116') {
+          console.log('Creating missing user profile...')
+          try {
+            const { error: insertError } = await supabase
+              .from('users')
+              .insert([
+                {
+                  id: authUser.id,
+                  email: authUser.email,
+                  credits: 10,
+                  subscription_status: 'inactive'
+                }
+              ])
 
-      setUser(userProfile)
+            if (insertError) {
+              console.error('Failed to create user profile:', insertError)
+              return
+            } else {
+              // Fetch the newly created profile
+              const { data: newProfile } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', authUser.id)
+                .single()
+              
+              if (newProfile) {
+                setUser(newProfile)
+              } else {
+                return
+              }
+            }
+          } catch (createError) {
+            console.error('Error creating user profile:', createError)
+            return
+          }
+        } else {
+          return
+        }
+      } else {
+        setUser(userProfile)
+      }
     } catch (error) {
       console.error('Error checking user:', error)
     } finally {

@@ -32,20 +32,35 @@ function AuthCallbackContent() {
             .single()
 
           if (profileError && profileError.code === 'PGRST116') {
-            // Profile doesn't exist, create one
-            const { error: insertError } = await supabase
-              .from('users')
-              .insert([
-                {
-                  id: data.session.user.id,
-                  email: data.session.user.email,
-                  credits: 10,
-                  subscription_status: 'inactive'
-                }
-              ])
+            // Profile doesn't exist, create one manually
+            console.log('Creating user profile manually...')
+            
+            try {
+              const { error: insertError } = await supabase
+                .from('users')
+                .insert([
+                  {
+                    id: data.session.user.id,
+                    email: data.session.user.email,
+                    credits: 10,
+                    subscription_status: 'inactive'
+                  }
+                ])
 
-            if (insertError) {
-              console.error('Profile creation error:', insertError)
+              if (insertError) {
+                console.error('Profile creation error:', insertError)
+                // Try to create user preferences anyway
+                await supabase
+                  .from('user_preferences')
+                  .insert([{ user_id: data.session.user.id }])
+              } else {
+                // Create user preferences
+                await supabase
+                  .from('user_preferences')
+                  .insert([{ user_id: data.session.user.id }])
+              }
+            } catch (error) {
+              console.error('Error creating user profile:', error)
             }
           }
 
