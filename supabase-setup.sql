@@ -398,6 +398,30 @@ COMMENT ON TABLE public.user_preferences IS 'User preferences and settings';
 COMMENT ON TABLE public.audit_logs IS 'Audit trail for compliance and security';
 
 -- =====================================================
+-- 14. GOOGLE AUTH CONFIGURATION
+-- =====================================================
+
+-- Enable Google Auth provider (run this in Supabase dashboard)
+-- Go to Authentication > Providers > Google and enable with your OAuth credentials
+
+-- Update user profile function to handle Google Auth users
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Check if user profile already exists (for Google Auth users)
+    IF NOT EXISTS (SELECT 1 FROM public.users WHERE id = NEW.id) THEN
+        INSERT INTO public.users (id, email, credits, subscription_status)
+        VALUES (NEW.id, NEW.email, 10, 'inactive');
+        
+        INSERT INTO public.user_preferences (user_id)
+        VALUES (NEW.id);
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- =====================================================
 -- SETUP COMPLETE!
 -- =====================================================
 

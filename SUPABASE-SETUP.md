@@ -71,10 +71,23 @@ SELECT name, role, persona FROM public.agents;
 - Customize welcome emails and password reset emails
 - Add your branding and adult entertainment appropriate language
 
-### 3.3 Social Providers (Optional)
+### 3.3 Google Auth Setup (Recommended)
 - **Authentication** → **Providers**
-- Enable Google, GitHub, or other providers if desired
-- Configure OAuth credentials
+- **Enable Google provider**
+- **Client ID**: Your Google OAuth client ID
+- **Client Secret**: Your Google OAuth client secret
+- **Redirect URL**: `https://your-project.supabase.co/auth/v1/callback`
+
+#### How to get Google OAuth credentials:
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing one
+3. Enable Google+ API
+4. Go to **Credentials** → **Create Credentials** → **OAuth 2.0 Client IDs**
+5. Set **Application type** to "Web application"
+6. Add authorized redirect URIs:
+   - `https://your-project.supabase.co/auth/v1/callback`
+   - `http://localhost:3000/auth/callback` (for development)
+7. Copy Client ID and Client Secret to Supabase
 
 ---
 
