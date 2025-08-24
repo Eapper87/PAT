@@ -89,17 +89,17 @@ export default function Home() {
         >
           {[
             {
-              icon: '🎯',
+              type: 'receptionists',
               title: 'Seductive Receptionist',
               description: 'AI-powered mistress that understands your desires and guides you to the perfect companion.'
             },
             {
-              icon: '🤖',
+              type: 'companions',
               title: 'Intimate Companions',
               description: 'Connect with AI performers trained in seduction and adult entertainment.'
             },
             {
-              icon: '⚡',
+              type: 'intimacy',
               title: 'Instant Intimacy',
               description: 'No waiting, no queues. Get connected to your AI companion in seconds.'
             }
@@ -111,7 +111,42 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 1 + index * 0.1 }}
               className="glass-card p-6 text-center hover:scale-105 transition-transform duration-300"
             >
-              <div className="text-4xl mb-4">{feature.icon}</div>
+              {feature.type === 'receptionists' ? (
+                <div className="flex justify-center items-center gap-2 mb-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-neon-pink/40">
+                    <img src="/Raven.png" alt="Raven" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-neon-blue/40">
+                    <img src="/Orion.png" alt="Orion" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-neon-green/40">
+                    <img src="/Nova.png" alt="Nova" className="w-full h-full object-cover" />
+                  </div>
+                </div>
+              ) : feature.type === 'companions' ? (
+                <div className="flex justify-center items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-full border-2 border-neon-pink/40 bg-dark-600 flex items-center justify-center">
+                    <div className="text-neon-pink/60 text-xs">Image</div>
+                  </div>
+                  <div className="w-12 h-12 rounded-full border-2 border-neon-blue/40 bg-dark-600 flex items-center justify-center">
+                    <div className="text-neon-blue/60 text-xs">Image</div>
+                  </div>
+                </div>
+              ) : feature.type === 'intimacy' ? (
+                <div className="flex justify-center items-center gap-2 mb-4">
+                  <div className="w-12 h-12 rounded-full border-2 border-neon-pink/40 bg-dark-600 flex items-center justify-center">
+                    <div className="text-neon-pink/60 text-xs">Image</div>
+                  </div>
+                  <div className="w-12 h-12 rounded-full border-2 border-neon-blue/40 bg-dark-600 flex items-center justify-center">
+                    <div className="text-neon-blue/60 text-xs">Image</div>
+                  </div>
+                  <div className="w-12 h-12 rounded-full border-2 border-neon-green/40 bg-dark-600 flex items-center justify-center">
+                    <div className="text-neon-green/60 text-xs">Image</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-4xl mb-4">{feature.icon}</div>
+              )}
               <h3 className="text-xl font-semibold mb-3 text-neon-pink">{feature.title}</h3>
               <p className="text-gray-400">{feature.description}</p>
             </motion.div>

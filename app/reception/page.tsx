@@ -62,7 +62,10 @@ export default function ReceptionPage() {
                 History
               </Link>
               <button
-                onClick={() => supabase.auth.signOut()}
+                onClick={async () => {
+                  await supabase.auth.signOut()
+                  router.push('/')
+                }}
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 Sign Out

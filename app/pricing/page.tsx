@@ -151,7 +151,10 @@ export default function Pricing() {
                   Dashboard
                 </Link>
                 <button
-                  onClick={() => supabase.auth.signOut()}
+                  onClick={async () => {
+                    await supabase.auth.signOut()
+                    router.push('/')
+                  }}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   Sign Out
@@ -326,12 +329,9 @@ export default function Pricing() {
         <p className="text-gray-400 mb-6">
           Join thousands of users already experiencing the future of AI fantasy companionship
         </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <Link href="/signup" className="cyber-button">
               Start Your Seduction
-            </Link>
-            <Link href="/demo" className="px-6 py-3 border border-neon-blue text-neon-blue hover:bg-neon-blue hover:text-dark-900 transition-all duration-300 rounded-xl">
-              Watch Demo
             </Link>
           </div>
         </div>
