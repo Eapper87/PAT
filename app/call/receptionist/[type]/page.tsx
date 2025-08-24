@@ -6,6 +6,15 @@ import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
+// TypeScript declaration for ElevenLabs Convai
+declare global {
+  interface Window {
+    ElevenLabsConvai: {
+      init: (config: { agentId: string; containerId: string }) => void;
+    };
+  }
+}
+
 interface ReceptionistConfig {
   name: string
   emoji: string
@@ -62,6 +71,34 @@ export default function ReceptionistCallPage() {
     }
     checkUser()
   }, [type, config])
+
+  // Load ElevenLabs Convai widget for Raven
+  useEffect(() => {
+    if (type === 'raven') {
+      // Load the script
+      const script = document.createElement('script')
+      script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
+      script.async = true
+      script.type = 'text/javascript'
+      
+      script.onload = () => {
+        // Initialize the widget after script loads
+        if (window.ElevenLabsConvai) {
+          window.ElevenLabsConvai.init({
+            agentId: 'agent_5201k3e7ympbfm0vxskkqz73raa3',
+            containerId: 'elevenlabs-convai-widget'
+          })
+        }
+      }
+      
+      document.head.appendChild(script)
+      
+      return () => {
+        // Cleanup script when component unmounts
+        document.head.removeChild(script)
+      }
+    }
+  }, [type])
 
   const checkUser = async () => {
     try {
@@ -223,8 +260,17 @@ export default function ReceptionistCallPage() {
           >
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Receptionist</h2>
             <div className="text-center">
-              <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
-              <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+              <div 
+                id="elevenlabs-convai-widget"
+                data-agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
+                className="w-full h-96 bg-dark-700 rounded-lg border border-neon-pink/40 flex items-center justify-center"
+              >
+                <div className="text-center">
+                  <div className="text-4xl mb-4">🖤</div>
+                  <p className="text-gray-400 mb-4">Loading Raven's AI voice...</p>
+                  <div className="text-neon-pink text-sm">ElevenLabs Convai Widget</div>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
