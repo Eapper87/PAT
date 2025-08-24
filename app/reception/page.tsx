@@ -115,7 +115,7 @@ export default function ReceptionPage() {
                 name: "Raven",
                 personality: "Mysterious & Seductive",
                 description: "Dark, mysterious, and takes control of your fantasies as your Mistress of Welcome",
-                icon: "🖤",
+                image: "/Raven.png",
                 route: "/call/receptionist/raven",
                 color: "border-neon-pink"
               },
@@ -123,7 +123,7 @@ export default function ReceptionPage() {
                 name: "Orion",
                 personality: "Strong & Protective",
                 description: "Masculine energy, protective, and makes you feel safe as your Pleasure Concierge",
-                icon: "💙",
+                image: "/Orion.png",
                 route: "/call/receptionist/orion",
                 color: "border-neon-blue"
               },
@@ -131,7 +131,7 @@ export default function ReceptionPage() {
                 name: "Nova",
                 personality: "Quirky & Playful",
                 description: "Fun, unpredictable, and absolutely fabulous as your Gatekeeper",
-                icon: "🌈",
+                image: "/Nova.png",
                 route: "/call/receptionist/nova",
                 color: "border-neon-green"
               }
@@ -143,7 +143,13 @@ export default function ReceptionPage() {
                 transition={{ delay: 0.4 + index * 0.1 }}
                 className="glass-card p-6 text-center hover:scale-105 transition-transform cursor-pointer"
               >
-                <div className="text-6xl mb-4">{receptionist.icon}</div>
+                <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-neon-pink/30 hover:border-neon-pink/60 transition-all duration-300">
+                  <img 
+                    src={receptionist.image} 
+                    alt={`${receptionist.name} - ${receptionist.personality}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <h3 className="text-2xl font-bold text-white mb-2">{receptionist.name}</h3>
                 <div className="text-neon-pink font-semibold mb-3">{receptionist.personality}</div>
                 <p className="text-gray-400 text-sm mb-6">{receptionist.description}</p>
@@ -166,13 +172,7 @@ export default function ReceptionPage() {
             ))}
           </div>
           
-          {isAuthenticated && (
-            <div className="text-center">
-              <Link href="/escorts" className="cyber-button text-lg px-8 py-4 bg-dark-700 border border-neon-pink text-neon-pink hover:bg-neon-pink hover:text-dark-900 transition-all duration-300">
-                💋 Browse All Companions
-              </Link>
-            </div>
-          )}
+
         </motion.div>
 
 
