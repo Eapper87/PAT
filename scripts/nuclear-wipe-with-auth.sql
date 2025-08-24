@@ -19,30 +19,62 @@ SET session_replication_role = replica;
 DO $$
 DECLARE
     user_count INTEGER;
+    table_exists BOOLEAN;
+    column_exists BOOLEAN;
 BEGIN
     -- Get user count first
     SELECT COUNT(*) INTO user_count FROM auth.users;
     
     IF user_count > 0 THEN
         -- Clear user sessions (safely)
-        DELETE FROM auth.sessions WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        BEGIN
+            DELETE FROM auth.sessions WHERE user_id::text IN (SELECT id::text FROM auth.users);
+            RAISE NOTICE 'Cleared user sessions';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE 'Could not clear sessions: %', SQLERRM;
+        END;
         
         -- Clear user identities (safely)
-        DELETE FROM auth.identities WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        BEGIN
+            DELETE FROM auth.identities WHERE user_id::text IN (SELECT id::text FROM auth.users);
+            RAISE NOTICE 'Cleared user identities';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE 'Could not clear identities: %', SQLERRM;
+        END;
         
         -- Clear user refresh tokens (safely)
-        DELETE FROM auth.refresh_tokens WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        BEGIN
+            DELETE FROM auth.refresh_tokens WHERE user_id::text IN (SELECT id::text FROM auth.users);
+            RAISE NOTICE 'Cleared user refresh tokens';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE 'Could not clear refresh tokens: %', SQLERRM;
+        END;
         
         -- Clear user factors (safely)
-        DELETE FROM auth.mfa_factors WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        BEGIN
+            DELETE FROM auth.mfa_factors WHERE user_id::text IN (SELECT id::text FROM auth.users);
+            RAISE NOTICE 'Cleared user MFA factors';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE 'Could not clear MFA factors: %', SQLERRM;
+        END;
         
         -- Clear user challenges (safely)
-        DELETE FROM auth.mfa_challenges WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        BEGIN
+            DELETE FROM auth.mfa_challenges WHERE user_id::text IN (SELECT id::text FROM auth.users);
+            RAISE NOTICE 'Cleared user MFA challenges';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE 'Could not clear MFA challenges: %', SQLERRM;
+        END;
         
         -- Clear user audit logs (safely)
-        DELETE FROM auth.audit_log_entries WHERE user_id::text IN (SELECT id::text FROM auth.users);
+        BEGIN
+            DELETE FROM auth.audit_log_entries WHERE user_id::text IN (SELECT id::text FROM auth.users);
+            RAISE NOTICE 'Cleared user audit logs';
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE 'Could not clear audit logs: %', SQLERRM;
+        END;
         
-        RAISE NOTICE 'Cleared auth data for % users', user_count;
+        RAISE NOTICE 'Completed auth cleanup for % users', user_count;
     ELSE
         RAISE NOTICE 'No users found to clear auth data for';
     END IF;
