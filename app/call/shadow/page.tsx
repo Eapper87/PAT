@@ -125,7 +125,7 @@ export default function ShadowPage() {
               },
               {
                 title: 'Hidden Desires',
-                description: 'Bring forth the fantasies you've kept buried deep inside'
+                description: "Bring forth the fantasies you've kept buried deep inside"
               }
             ].map((specialty, index) => (
               <div key={index} className="p-4 bg-dark-700 rounded-lg border border-neon-pink/20">
