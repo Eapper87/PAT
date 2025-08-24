@@ -165,8 +165,7 @@ export default function ReceptionistCallPage() {
           >
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Receptionist</h2>
             <div className="text-center">
-              <div className="text-neon-pink text-lg mb-4">Chat with Raven directly below</div>
-              <div className="w-full min-h-[500px] rounded-lg border border-neon-pink/40 overflow-hidden">
+              <div className="w-full min-h-[600px] rounded-lg border border-neon-pink/40 overflow-hidden">
                 <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
