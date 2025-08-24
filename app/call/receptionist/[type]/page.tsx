@@ -80,24 +80,14 @@ export default function ReceptionistCallPage() {
           // Clear the container
           container.innerHTML = ''
           
-          // Create the embed element
-          const embedElement = document.createElement('elevenlabs-convai')
-          embedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
+          // Use the exact embed snippet as HTML
+          const embedHTML = '<elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai><script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>'
           
-          // Add the embed element
-          container.appendChild(embedElement)
+          // Inject the HTML directly
+          container.innerHTML = embedHTML
           
-          // Add the script tag
-          const script = document.createElement('script')
-          script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
-          script.async = true
-          script.type = 'text/javascript'
-          
-          // Add script to container
-          container.appendChild(script)
-          
-          console.log('✅ ElevenLabs embed snippet added')
-          updateWidgetStatus(`Attempt ${retryCount + 1} - Embed snippet added`)
+          console.log('✅ ElevenLabs embed snippet injected as HTML')
+          updateWidgetStatus(`Attempt ${retryCount + 1} - Embed snippet injected`)
           
           // Check if widget appeared after a delay
           setTimeout(() => {
