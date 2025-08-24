@@ -12,6 +12,12 @@ declare global {
     ElevenLabsConvai: {
       init: (config: { agentId: string; containerId: string }) => void;
     };
+    ElevenLabs: {
+      init: (config: { agentId: string; containerId: string }) => void;
+    };
+    Convai: {
+      init: (config: { agentId: string; containerId: string }) => void;
+    };
   }
 }
 
@@ -92,7 +98,24 @@ export default function ReceptionistCallPage() {
       
       script.onload = () => {
         console.log('✅ ElevenLabs script loaded successfully')
-        initializeWidget()
+        console.log('🔍 Checking global scope after script load:', Object.keys(window))
+        console.log('🔍 Looking for ElevenLabs objects...')
+        
+        // Check what's available immediately
+        if (window.ElevenLabsConvai) {
+          console.log('✅ ElevenLabsConvai found immediately!')
+        } else if (window.ElevenLabs) {
+          console.log('✅ ElevenLabs found immediately!')
+        } else if (window.Convai) {
+          console.log('✅ Convai found immediately!')
+        } else {
+          console.log('❌ No ElevenLabs objects found immediately')
+        }
+        
+        // Give the script more time to initialize
+        setTimeout(() => {
+          initializeWidget()
+        }, 2000)
       }
       
       script.onerror = (error) => {
@@ -118,26 +141,143 @@ export default function ReceptionistCallPage() {
   const initializeWidget = () => {
     console.log('🔄 Initializing ElevenLabs widget...')
     
-    // Wait a bit for the script to fully initialize
-    setTimeout(() => {
-      if (window.ElevenLabsConvai) {
-        console.log('✅ ElevenLabsConvai object found, initializing...')
+    // Try multiple approaches to find the ElevenLabs object
+    const checkAndInitialize = () => {
+      console.log('🔍 Checking for ElevenLabs object...')
+      
+      // Check multiple possible global object names
+      const possibleObjects = [
+        'ElevenLabsConvai',
+        'ElevenLabs',
+        'Convai',
+        'window.ElevenLabsConvai',
+        'window.ElevenLabs',
+        'window.Convai'
+      ]
+      
+      console.log('🔍 Available global objects:', Object.keys(window))
+      
+      for (const objName of possibleObjects) {
         try {
-          window.ElevenLabsConvai.init({
-            agentId: 'agent_5201k3e7ympbfm0vxskkqz73raa3',
-            containerId: 'elevenlabs-convai-widget'
-          })
-          console.log('✅ Widget initialized successfully')
-          updateWidgetStatus('Widget ready - speak to Raven!')
+          const obj = eval(objName)
+          if (obj && typeof obj.init === 'function') {
+            console.log(`✅ Found ElevenLabs object: ${objName}`)
+            try {
+              obj.init({
+                agentId: 'agent_5201k3e7ympbfm0vxskkqz73raa3',
+                containerId: 'elevenlabs-convai-widget'
+              })
+              console.log('✅ Widget initialized successfully')
+              updateWidgetStatus('Widget ready - speak to Raven!')
+              return
+            } catch (error) {
+              console.error('❌ Widget initialization failed:', error)
+              updateWidgetStatus('Widget initialization failed')
+              return
+            }
+          }
         } catch (error) {
-          console.error('❌ Widget initialization failed:', error)
-          updateWidgetStatus('Widget initialization failed')
+          // Continue checking other objects
+          console.log(`⚠️ ${objName} not accessible:`, error)
         }
-      } else {
-        console.error('❌ ElevenLabsConvai object not found')
-        updateWidgetStatus('ElevenLabs object not found')
       }
-    }, 1000)
+      
+      // If we get here, no object was found
+      console.error('❌ No ElevenLabs object found with init method')
+      updateWidgetStatus('No ElevenLabs object found')
+      
+      // Try fallback approach - inject the original embed code
+      tryFallbackEmbed()
+    }
+    
+    // Try immediately
+    checkAndInitialize()
+    
+    // If that fails, try again after a delay
+    setTimeout(checkAndInitialize, 1000)
+    
+    // And try one more time after a longer delay
+    setTimeout(checkAndInitialize, 3000)
+  }
+
+  const tryFallbackEmbed = () => {
+    console.log('🔄 Trying fallback embed approach...')
+    updateWidgetStatus('Trying fallback embed...')
+    
+    try {
+      // Create the embed element
+      const embedElement = document.createElement('elevenlabs-convai')
+      embedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
+      
+      // Replace the container content
+      const container = document.getElementById('elevenlabs-convai-widget')
+      if (container) {
+        container.innerHTML = ''
+        container.appendChild(embedElement)
+        console.log('✅ Fallback embed element created')
+        updateWidgetStatus('Fallback embed created - check if working')
+        
+        // Also try to manually inject the script again
+        setTimeout(() => {
+          tryManualScriptInjection()
+        }, 2000)
+      }
+    } catch (error) {
+      console.error('❌ Fallback embed failed:', error)
+      updateWidgetStatus('Fallback embed failed')
+    }
+  }
+
+  const tryManualScriptInjection = () => {
+    console.log('🔄 Trying manual script injection...')
+    updateWidgetStatus('Trying manual script injection...')
+    
+    try {
+      // Try to inject the script directly into the container
+      const container = document.getElementById('elevenlabs-convai-widget')
+      if (container) {
+        const script = document.createElement('script')
+        script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
+        script.async = true
+        script.type = 'text/javascript'
+        
+        script.onload = () => {
+          console.log('✅ Manual script injection successful')
+          updateWidgetStatus('Manual script loaded - checking for widget...')
+          
+          // Wait a bit and check again
+          setTimeout(() => {
+            if (window.ElevenLabsConvai) {
+              console.log('✅ ElevenLabsConvai found after manual injection!')
+              try {
+                window.ElevenLabsConvai.init({
+                  agentId: 'agent_5201k3e7ympbfm0vxskkqz73raa3',
+                  containerId: 'elevenlabs-convai-widget'
+                })
+                console.log('✅ Widget initialized successfully after manual injection!')
+                updateWidgetStatus('Widget working after manual injection!')
+              } catch (error) {
+                console.error('❌ Manual injection widget init failed:', error)
+                updateWidgetStatus('Manual injection failed')
+              }
+            } else {
+              console.log('❌ ElevenLabsConvai still not found after manual injection')
+              updateWidgetStatus('Manual injection completed but widget not found')
+            }
+          }, 2000)
+        }
+        
+        script.onerror = (error) => {
+          console.error('❌ Manual script injection failed:', error)
+          updateWidgetStatus('Manual script injection failed')
+        }
+        
+        container.appendChild(script)
+      }
+    } catch (error) {
+      console.error('❌ Manual script injection failed:', error)
+      updateWidgetStatus('Manual script injection failed')
+    }
   }
 
   const updateWidgetStatus = (status: string) => {
@@ -344,6 +484,20 @@ export default function ReceptionistCallPage() {
                   <div>Container: elevenlabs-convai-widget</div>
                   <div>Script Status: <span id="script-status">Loading...</span></div>
                   <div>Widget Status: <span id="widget-status">Initializing...</span></div>
+                </div>
+                
+                {/* Manual Retry Button */}
+                <div className="mt-3 text-center">
+                  <button
+                    onClick={() => {
+                      console.log('🔄 Manual retry requested...')
+                      updateWidgetStatus('Manual retry...')
+                      initializeWidget()
+                    }}
+                    className="px-4 py-2 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors text-sm"
+                  >
+                    🔄 Retry Widget
+                  </button>
                 </div>
               </div>
             </div>
