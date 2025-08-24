@@ -9,7 +9,7 @@ import Link from 'next/link'
 export default function ReceptionistCallPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [callStatus, setCallStatus] = useState<'connecting' | 'active' | 'routing'>('connecting')
+  const [callStatus, setCallStatus] = useState<'connecting' | 'active'>('connecting')
   const [conversation, setConversation] = useState<string[]>([])
   const [userInput, setUserInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -73,28 +73,19 @@ export default function ReceptionistCallPage() {
     const lowerMessage = userMessage.toLowerCase()
     
     if (lowerMessage.includes('passion') || lowerMessage.includes('hot') || lowerMessage.includes('sexy')) {
-      return "Mmm, I love a passionate one... 🔥 Let me connect you with our fiery performer who will set your world on fire. She's perfect for intense, steamy conversations."
+      return "Mmm, I love a passionate one... 🔥 You want it hot and steamy, don't you? I can feel your desire from here. Tell me more about what makes you burn inside..."
     } else if (lowerMessage.includes('romantic') || lowerMessage.includes('sweet') || lowerMessage.includes('love')) {
-      return "A romantic soul... 💕 How beautiful. I have the perfect companion for you - someone who will whisper sweet nothings and make you feel truly cherished."
+      return "A romantic soul... 💕 How beautiful. You want someone who will whisper sweet nothings and make you feel truly cherished. Tell me about your romantic fantasies..."
     } else if (lowerMessage.includes('roleplay') || lowerMessage.includes('fantasy') || lowerMessage.includes('scenario')) {
-      return "Ooh, you want to play... 🎭 I love that! Our performers are experts at creating immersive scenarios. What kind of fantasy world would you like to explore?"
+      return "Ooh, you want to play... 🎭 I love that! Roleplay can be so exciting. What kind of fantasy world would you like to explore? I'm all ears, darling..."
     } else if (lowerMessage.includes('talk') || lowerMessage.includes('conversation') || lowerMessage.includes('chat')) {
-      return "Sometimes the best connection is through words... 💭 I have companions who are excellent conversationalists. They'll listen, understand, and respond to your deepest desires."
+      return "Sometimes the best connection is through words... 💭 I love deep conversations too. Tell me more about what's on your mind, what you're looking for..."
     } else {
-      return "Mmm, tell me more about what you're looking for, darling... 💋 I want to make sure I connect you with the perfect companion who will fulfill your every fantasy."
+      return "Mmm, tell me more about what you're looking for, darling... 💋 I want to understand your desires better. What kind of experience are you craving?"
     }
   }
 
-  const routeToAgent = (agentType: string) => {
-    setCallStatus('routing')
-    addReceptionistMessage(`Perfect choice, darling... Let me transfer you to our ${agentType}. You're going to love this... 💋`)
-    
-    // Simulate transfer delay
-    setTimeout(() => {
-      // For now, redirect to a placeholder - you'll create specific agent pages later
-      router.push(`/call/${agentType.toLowerCase().replace(' ', '-')}`)
-    }, 3000)
-  }
+
 
   if (loading) {
     return (
@@ -117,13 +108,9 @@ export default function ReceptionistCallPage() {
         <div className="text-white">
           <span className="text-gray-400">Status: </span>
           <span className={`${
-            callStatus === 'connecting' ? 'text-yellow-400' :
-            callStatus === 'active' ? 'text-neon-green' :
-            'text-neon-pink'
+            callStatus === 'connecting' ? 'text-yellow-400' : 'text-neon-green'
           }`}>
-            {callStatus === 'connecting' ? 'Connecting...' :
-             callStatus === 'active' ? 'Active' :
-             'Transferring...'}
+            {callStatus === 'connecting' ? 'Connecting...' : 'Active'}
           </span>
         </div>
       </header>
@@ -208,57 +195,9 @@ export default function ReceptionistCallPage() {
           )}
         </motion.div>
 
-        {/* Quick Routing Options */}
-        {callStatus === 'active' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="glass-card p-6 mb-8"
-          >
-            <h3 className="text-xl font-semibold text-white mb-4">Quick Connect Options</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { name: "Passionate Performer", description: "For intense, steamy conversations", icon: "🔥" },
-                { name: "Romantic Companion", description: "For sweet, emotional connections", icon: "💕" },
-                { name: "Roleplay Specialist", description: "For immersive fantasy scenarios", icon: "🎭" },
-                { name: "Conversationalist", description: "For deep, meaningful talks", icon: "💭" }
-              ].map((option, index) => (
-                <button
-                  key={option.name}
-                  onClick={() => routeToAgent(option.name)}
-                  className="p-4 bg-dark-700 rounded-lg hover:bg-dark-600 transition-colors text-left"
-                >
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">{option.icon}</span>
-                    <div>
-                      <div className="font-semibold text-white">{option.name}</div>
-                      <div className="text-sm text-gray-400">{option.description}</div>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
 
-        {/* Transfer Status */}
-        {callStatus === 'routing' && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass-card p-8 text-center"
-          >
-            <div className="text-6xl mb-4">🔄</div>
-            <h3 className="text-2xl font-bold text-white mb-4">Transferring You...</h3>
-            <p className="text-gray-400">
-              Your seductive receptionist is connecting you to your perfect companion...
-            </p>
-            <div className="mt-4">
-              <div className="w-8 h-8 border-2 border-neon-pink border-t-transparent rounded-full animate-spin mx-auto"></div>
-            </div>
-          </motion.div>
-        )}
+
+
 
         {/* Back to Reception */}
         <motion.div
