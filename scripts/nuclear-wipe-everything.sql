@@ -20,7 +20,25 @@ DROP SCHEMA IF EXISTS reports CASCADE;
 -- STEP 2: DROP ALL TABLES IN PUBLIC SCHEMA
 -- =====================================================
 
--- Drop all tables (this will cascade to drop everything dependent)
+-- First, let's see what tables actually exist
+DO $$
+DECLARE
+    table_record RECORD;
+BEGIN
+    -- Drop all tables in public schema dynamically
+    FOR table_record IN 
+        SELECT tablename 
+        FROM pg_tables 
+        WHERE schemaname = 'public' 
+        AND tablename NOT LIKE 'pg_%'
+        AND tablename NOT LIKE 'sql_%'
+    LOOP
+        EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(table_record.tablename) || ' CASCADE';
+        RAISE NOTICE 'Dropped table: %', table_record.tablename;
+    END LOOP;
+END $$;
+
+-- Also try to drop specific tables we know about (with IF EXISTS)
 DROP TABLE IF EXISTS public.transactions CASCADE;
 DROP TABLE IF EXISTS public.calls CASCADE;
 DROP TABLE IF EXISTS public.agents CASCADE;
