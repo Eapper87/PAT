@@ -6,6 +6,17 @@ import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
+// TypeScript declaration for ElevenLabs custom element
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'elevenlabs-convai': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        'agent-id': string
+      }
+    }
+  }
+}
+
 interface ReceptionistConfig {
   name: string
   emoji: string
@@ -156,15 +167,8 @@ export default function ReceptionistCallPage() {
             <div className="text-center">
               <div className="text-8xl mb-4">🖤</div>
               <div className="text-neon-pink text-lg mb-4">Chat with Raven directly below</div>
-              <div className="w-full h-96 rounded-lg border border-neon-pink/40 overflow-hidden">
-                <iframe
-                  src="https://elevenlabs.io/app/talk-to?agent_id=agent_5201k3e7ympbfm0vxskkqz73raa3"
-                  className="w-full h-full border-0"
-                  title="Talk to Raven - AI Voice Chat"
-                  allow="microphone; camera"
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-                />
-              </div>
+              <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
+              <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
             </div>
           </motion.div>
         )}
