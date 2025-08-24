@@ -6,21 +6,6 @@ import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
-// TypeScript declaration for ElevenLabs Convai
-declare global {
-  interface Window {
-    ElevenLabsConvai: {
-      init: (config: { agentId: string; containerId: string }) => void;
-    };
-    ElevenLabs: {
-      init: (config: { agentId: string; containerId: string }) => void;
-    };
-    Convai: {
-      init: (config: { agentId: string; containerId: string }) => void;
-    };
-  }
-}
-
 interface ReceptionistConfig {
   name: string
   emoji: string
@@ -81,204 +66,35 @@ export default function ReceptionistCallPage() {
   // Load ElevenLabs Convai widget for Raven
   useEffect(() => {
     if (type === 'raven') {
-      console.log('🖤 Loading ElevenLabs widget for Raven...')
+      console.log('🖤 Setting up ElevenLabs widget for Raven...')
       
-      // Check if script is already loaded
-      if (document.querySelector('script[src*="elevenlabs/convai-widget-embed"]')) {
-        console.log('✅ ElevenLabs script already loaded, initializing widget...')
-        initializeWidget()
-        return
-      }
-
-      // Load the script
-      const script = document.createElement('script')
-      script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
-      script.async = true
-      script.type = 'text/javascript'
-      
-      script.onload = () => {
-        console.log('✅ ElevenLabs script loaded successfully')
-        console.log('🔍 Checking global scope after script load:', Object.keys(window))
-        console.log('🔍 Looking for ElevenLabs objects...')
-        
-        // Check what's available immediately
-        if (window.ElevenLabsConvai) {
-          console.log('✅ ElevenLabsConvai found immediately!')
-        } else if (window.ElevenLabs) {
-          console.log('✅ ElevenLabs found immediately!')
-        } else if (window.Convai) {
-          console.log('✅ Convai found immediately!')
-        } else {
-          console.log('❌ No ElevenLabs objects found immediately')
-        }
-        
-        // Give the script more time to initialize
-        setTimeout(() => {
-          initializeWidget()
-        }, 2000)
-      }
-      
-      script.onerror = (error) => {
-        console.error('❌ Failed to load ElevenLabs script:', error)
-        updateWidgetStatus('Script loading failed')
-      }
-      
-      document.head.appendChild(script)
-      
-      return () => {
-        // Cleanup script when component unmounts
-        try {
-          if (script.parentNode) {
-            document.head.removeChild(script)
-          }
-        } catch (error) {
-          console.log('Script cleanup error (normal):', error)
-        }
-      }
-    }
-  }, [type])
-
-  const initializeWidget = () => {
-    console.log('🔄 Initializing ElevenLabs widget...')
-    
-    // Try multiple approaches to find the ElevenLabs object
-    const checkAndInitialize = () => {
-      console.log('🔍 Checking for ElevenLabs object...')
-      
-      // Check multiple possible global object names
-      const possibleObjects = [
-        'ElevenLabsConvai',
-        'ElevenLabs',
-        'Convai',
-        'window.ElevenLabsConvai',
-        'window.ElevenLabs',
-        'window.Convai'
-      ]
-      
-      console.log('🔍 Available global objects:', Object.keys(window))
-      
-      for (const objName of possibleObjects) {
-        try {
-          const obj = eval(objName)
-          if (obj && typeof obj.init === 'function') {
-            console.log(`✅ Found ElevenLabs object: ${objName}`)
-            try {
-              obj.init({
-                agentId: 'agent_5201k3e7ympbfm0vxskkqz73raa3',
-                containerId: 'elevenlabs-convai-widget'
-              })
-              console.log('✅ Widget initialized successfully')
-              updateWidgetStatus('Widget ready - speak to Raven!')
-              return
-            } catch (error) {
-              console.error('❌ Widget initialization failed:', error)
-              updateWidgetStatus('Widget initialization failed')
-              return
-            }
-          }
-        } catch (error) {
-          // Continue checking other objects
-          console.log(`⚠️ ${objName} not accessible:`, error)
-        }
-      }
-      
-      // If we get here, no object was found
-      console.error('❌ No ElevenLabs object found with init method')
-      updateWidgetStatus('No ElevenLabs object found')
-      
-      // Try fallback approach - inject the original embed code
-      tryFallbackEmbed()
-    }
-    
-    // Try immediately
-    checkAndInitialize()
-    
-    // If that fails, try again after a delay
-    setTimeout(checkAndInitialize, 1000)
-    
-    // And try one more time after a longer delay
-    setTimeout(checkAndInitialize, 3000)
-  }
-
-  const tryFallbackEmbed = () => {
-    console.log('🔄 Trying fallback embed approach...')
-    updateWidgetStatus('Trying fallback embed...')
-    
-    try {
-      // Create the embed element
-      const embedElement = document.createElement('elevenlabs-convai')
-      embedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
-      
-      // Replace the container content
+      // Simple approach - just inject the embed snippet
       const container = document.getElementById('elevenlabs-convai-widget')
       if (container) {
+        // Clear the container
         container.innerHTML = ''
-        container.appendChild(embedElement)
-        console.log('✅ Fallback embed element created')
-        updateWidgetStatus('Fallback embed created - check if working')
         
-        // Also try to manually inject the script again
-        setTimeout(() => {
-          tryManualScriptInjection()
-        }, 2000)
-      }
-    } catch (error) {
-      console.error('❌ Fallback embed failed:', error)
-      updateWidgetStatus('Fallback embed failed')
-    }
-  }
-
-  const tryManualScriptInjection = () => {
-    console.log('🔄 Trying manual script injection...')
-    updateWidgetStatus('Trying manual script injection...')
-    
-    try {
-      // Try to inject the script directly into the container
-      const container = document.getElementById('elevenlabs-convai-widget')
-      if (container) {
+        // Create the embed element
+        const embedElement = document.createElement('elevenlabs-convai')
+        embedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
+        
+        // Add the embed element
+        container.appendChild(embedElement)
+        
+        // Add the script tag
         const script = document.createElement('script')
         script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
         script.async = true
         script.type = 'text/javascript'
         
-        script.onload = () => {
-          console.log('✅ Manual script injection successful')
-          updateWidgetStatus('Manual script loaded - checking for widget...')
-          
-          // Wait a bit and check again
-          setTimeout(() => {
-            if (window.ElevenLabsConvai) {
-              console.log('✅ ElevenLabsConvai found after manual injection!')
-              try {
-                window.ElevenLabsConvai.init({
-                  agentId: 'agent_5201k3e7ympbfm0vxskkqz73raa3',
-                  containerId: 'elevenlabs-convai-widget'
-                })
-                console.log('✅ Widget initialized successfully after manual injection!')
-                updateWidgetStatus('Widget working after manual injection!')
-              } catch (error) {
-                console.error('❌ Manual injection widget init failed:', error)
-                updateWidgetStatus('Manual injection failed')
-              }
-            } else {
-              console.log('❌ ElevenLabsConvai still not found after manual injection')
-              updateWidgetStatus('Manual injection completed but widget not found')
-            }
-          }, 2000)
-        }
-        
-        script.onerror = (error) => {
-          console.error('❌ Manual script injection failed:', error)
-          updateWidgetStatus('Manual script injection failed')
-        }
-        
+        // Add script to container
         container.appendChild(script)
+        
+        console.log('✅ ElevenLabs embed snippet added')
+        updateWidgetStatus('Embed snippet added - widget should appear')
       }
-    } catch (error) {
-      console.error('❌ Manual script injection failed:', error)
-      updateWidgetStatus('Manual script injection failed')
     }
-  }
+  }, [type])
 
   const updateWidgetStatus = (status: string) => {
     // Update the debug display
@@ -290,15 +106,6 @@ export default function ReceptionistCallPage() {
     }
     if (widgetStatus) {
       widgetStatus.textContent = status
-    }
-    
-    // Also update the widget container status
-    const widgetContainer = document.getElementById('elevenlabs-convai-widget')
-    if (widgetContainer) {
-      const statusElement = widgetContainer.querySelector('.text-xs.text-gray-500')
-      if (statusElement) {
-        statusElement.textContent = `Debug: ${status}`
-      }
     }
   }
 
@@ -492,7 +299,24 @@ export default function ReceptionistCallPage() {
                     onClick={() => {
                       console.log('🔄 Manual retry requested...')
                       updateWidgetStatus('Manual retry...')
-                      initializeWidget()
+                      
+                      // Re-inject the embed snippet
+                      const container = document.getElementById('elevenlabs-convai-widget')
+                      if (container) {
+                        container.innerHTML = ''
+                        
+                        const embedElement = document.createElement('elevenlabs-convai')
+                        embedElement.setAttribute('agent-id', 'agent_5201k3e7ympbfm0vxskkqz73raa3')
+                        container.appendChild(embedElement)
+                        
+                        const script = document.createElement('script')
+                        script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed'
+                        script.async = true
+                        script.type = 'text/javascript'
+                        container.appendChild(script)
+                        
+                        updateWidgetStatus('Embed snippet re-injected')
+                      }
                     }}
                     className="px-4 py-2 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors text-sm"
                   >
