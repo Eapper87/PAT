@@ -4,7 +4,7 @@ A modern, AI-powered fantasy companion service featuring multiple AI receptionis
 
 ## ✨ Features
 
-- **Multiple AI Receptionists**: Choose from 3 unique personalities (Raven, Orion, Nova)
+- **Multiple AI Fantasy Guides**: Choose from 3 unique personalities (Raven, Orion, Nova)
 - **AI Escort Companions**: 10+ specialized AI companions with unique personalities
 - **Interactive Conversations**: Real-time AI chat with personality-driven responses
 - **Credit System**: Pay-per-minute or subscription-based credit system
@@ -177,11 +177,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - **Call History**: View and manage past conversations
 
 ### Reception System (`/reception`)
-- **Multiple AI Receptionists**: Choose from 3 unique personalities
-- **Raven** 🖤: Mysterious & Seductive (Female) - ElevenLabs Voice Agent
-- **Orion** 💙: Strong & Protective (Male) - ElevenLabs Voice Agent  
-- **Nova** 🌈: Quirky & Playful (Gender-fluid) - ElevenLabs Voice Agent
-- Each receptionist has unique conversation styles and responses
+- **Multiple AI Fantasy Guides**: Choose from 3 unique personalities
+- **Raven** 🖤: Mysterious & Seductive Mistress of Welcome (Female) - ElevenLabs Voice Agent
+- **Orion** 💙: Strong & Protective Pleasure Concierge (Male) - ElevenLabs Voice Agent  
+- **Nova** 🌈: Quirky & Playful Gatekeeper (Gender-fluid) - ElevenLabs Voice Agent
+- Each guide has unique conversation styles and responses
 - **Voice Integration**: Direct ElevenLabs agent connections for immersive experiences
 
 ### AI Escort Companions
@@ -192,7 +192,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - **Escorts Showcase** (`/escorts`): Browse all companions with gender filtering
 
 ### Call Interfaces
-- **Receptionist Calls**: `/call/receptionist`, `/call/orion`, `/call/nova`
+- **Fantasy Guide Calls**: `/call/receptionist`, `/call/orion`, `/call/nova`
 - **Escort Calls**: `/call/serena`, `/call/luna`, `/call/phoenix`, etc.
 - Real-time AI conversation management
 - Personality-driven responses and interactions
@@ -402,7 +402,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Completed ✅
 - [x] User authentication system
-- [x] Multiple AI receptionist system (3 personalities)
+- [x] Multiple AI fantasy guide system (3 personalities)
 - [x] AI escort companion system (12 personalities)
 - [x] Interactive conversation interfaces
 - [x] Call interface and management
@@ -412,7 +412,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] Admin dashboard
 - [x] Escorts showcase page with gender filtering
 - [x] Personality-driven AI responses
-- [x] ElevenLabs voice integration for receptionists
+- [x] ElevenLabs voice integration for fantasy guides
 - [x] Updated credit system (50/200 minutes for Pro/Enterprise)
 
 ### In Progress 🚧

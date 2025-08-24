@@ -124,7 +124,7 @@ export default function ReceptionistCallPage() {
           className="glass-card p-8 mb-8 text-center"
         >
           <div className="text-8xl mb-4">🖤</div>
-          <h1 className="text-4xl font-bold text-white mb-4">Raven - Your Seductive Receptionist</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Raven - Your Seductive Mistress of Welcome</h1>
           <p className="text-xl text-gray-400 mb-6">
             "I'm here to make all your fantasies come true, darling..."
           </p>

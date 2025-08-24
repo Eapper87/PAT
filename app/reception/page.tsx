@@ -107,14 +107,14 @@ export default function ReceptionPage() {
           className="mb-12"
         >
           <h2 className="text-3xl font-bold text-white text-center mb-8">
-            Choose Your Receptionist
+            Choose Your Fantasy Guide
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {[
               {
                 name: "Raven",
                 personality: "Mysterious & Seductive",
-                description: "Dark, mysterious, and takes control of your fantasies",
+                description: "Dark, mysterious, and takes control of your fantasies as your Mistress of Welcome",
                 icon: "🖤",
                 route: "/call/receptionist/raven",
                 color: "border-neon-pink"
@@ -122,7 +122,7 @@ export default function ReceptionPage() {
               {
                 name: "Orion",
                 personality: "Strong & Protective",
-                description: "Masculine energy, protective, and makes you feel safe",
+                description: "Masculine energy, protective, and makes you feel safe as your Pleasure Concierge",
                 icon: "💙",
                 route: "/call/receptionist/orion",
                 color: "border-neon-blue"
@@ -130,7 +130,7 @@ export default function ReceptionPage() {
               {
                 name: "Nova",
                 personality: "Quirky & Playful",
-                description: "Fun, unpredictable, and absolutely fabulous",
+                description: "Fun, unpredictable, and absolutely fabulous as your Gatekeeper",
                 icon: "🌈",
                 route: "/call/receptionist/nova",
                 color: "border-neon-green"
@@ -175,64 +175,13 @@ export default function ReceptionPage() {
           )}
         </motion.div>
 
-        {/* Available Companions Preview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="glass-card p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-white text-center mb-8">
-            Meet Your Available Companions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                name: "Seductive Receptionist",
-                description: "Your main point of contact and fantasy coordinator",
-                icon: "💋",
-                status: "Available Now"
-              },
-              {
-                name: "Passionate Performer",
-                description: "Intimate conversations and role-play scenarios",
-                icon: "🔥",
-                status: "Coming Soon"
-              },
-              {
-                name: "Romantic Companion",
-                description: "Sweet talk and emotional connection",
-                icon: "💕",
-                status: "Coming Soon"
-              }
-            ].map((companion, index) => (
-              <motion.div
-                key={companion.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6 + index * 0.1 }}
-                className="bg-dark-700 rounded-lg p-6 text-center hover:bg-dark-600 transition-colors"
-              >
-                <div className="text-4xl mb-3">{companion.icon}</div>
-                <h3 className="text-xl font-semibold text-white mb-2">{companion.name}</h3>
-                <p className="text-gray-400 text-sm mb-3">{companion.description}</p>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  companion.status === 'Available Now' 
-                    ? 'bg-neon-green/20 text-neon-green' 
-                    : 'bg-neon-blue/20 text-neon-blue'
-                }`}>
-                  {companion.status}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+
 
         {/* How It Works */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.4 }}
           className="glass-card p-8 mb-8"
         >
           <h2 className="text-3xl font-bold text-white text-center mb-8">
@@ -265,7 +214,7 @@ export default function ReceptionPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.6 }}
           className="text-center"
         >
           <div className="glass-card p-8">

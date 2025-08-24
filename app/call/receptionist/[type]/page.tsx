@@ -139,7 +139,11 @@ export default function ReceptionistCallPage() {
           className="glass-card p-8 mb-8 text-center"
         >
           <div className="text-8xl mb-4">{config.emoji}</div>
-          <h1 className="text-4xl font-bold text-white mb-4">{config.name} - Your {config.personality} Receptionist</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">
+            {type === 'raven' && `${config.name} - Your ${config.personality} Mistress of Welcome`}
+            {type === 'orion' && `${config.name} - Your ${config.personality} Pleasure Concierge`}
+            {type === 'nova' && `${config.name} - Your ${config.personality} Gatekeeper`}
+          </h1>
           <p className="text-xl text-gray-400 mb-6">
             "I'm here to make your fantasies come true..."
           </p>
@@ -163,7 +167,7 @@ export default function ReceptionistCallPage() {
             transition={{ delay: 0.2 }}
             className="glass-card p-4 md:p-6 mb-8"
           >
-            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Receptionist</h2>
+            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Mistress of Welcome</h2>
             <div className="text-center">
               <div className="w-full min-h-[600px] rounded-lg border border-neon-pink/40 overflow-hidden">
                 <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
@@ -181,7 +185,7 @@ export default function ReceptionistCallPage() {
             transition={{ delay: 0.2 }}
             className="glass-card p-4 md:p-6 mb-8"
           >
-            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Orion - Your AI Receptionist</h2>
+            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Orion - Your AI Pleasure Concierge</h2>
             <div className="text-center">
               <div className="w-full min-h-[600px] rounded-lg border border-neon-blue/40 overflow-hidden">
                 <elevenlabs-convai agent-id="agent_8601k3eeze9aftrbtc7twm7xsfa4"></elevenlabs-convai>
@@ -199,7 +203,7 @@ export default function ReceptionistCallPage() {
             transition={{ delay: 0.2 }}
             className="glass-card p-4 md:p-6 mb-8"
           >
-            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Nova - Your AI Receptionist</h2>
+            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Nova - Your AI Gatekeeper</h2>
             <div className="text-center">
               <div className="w-full min-h-[600px] rounded-lg border border-neon-green/40 overflow-hidden">
                 <elevenlabs-convai agent-id="agent_0401k3ef8wcvfpmvqvcas62ewkgf"></elevenlabs-convai>
