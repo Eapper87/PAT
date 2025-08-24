@@ -173,67 +173,54 @@ export default function ReceptionistCallPage() {
           </motion.div>
         )}
 
-        {/* Voice-Only Notice for Raven */}
-        {type === 'raven' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="glass-card p-4 mb-8 text-center"
-          >
-            <div className="text-neon-pink text-lg mb-2">🎤 Voice-Only Experience</div>
-            <p className="text-gray-400 text-sm">
-              Use the voice chat interface above to talk directly with Raven. No text input needed - just speak naturally and experience her mysterious and seductive personality!
-            </p>
-          </motion.div>
-        )}
-
-        {/* Text Conversation Area - Only for Orion and Nova */}
-        {type !== 'raven' && (
+        {/* ElevenLabs Convai Widget for Orion */}
+        {type === 'orion' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="glass-card p-6 mb-8"
+            className="glass-card p-4 md:p-6 mb-8"
           >
-            <h2 className="text-2xl font-semibold text-white mb-6">Your Conversation with {config.name}</h2>
-            
-            <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-2">{config.emoji}</div>
-                  <p className="text-gray-400">{config.name} is connecting...</p>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-2">{config.emoji}</div>
-                  <p className="text-gray-400">{config.name} is ready to chat!</p>
-                </div>
-              )}
+            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Orion - Your AI Receptionist</h2>
+            <div className="text-center">
+              <div className="w-full min-h-[600px] rounded-lg border border-neon-blue/40 overflow-hidden">
+                <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
+                <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+              </div>
             </div>
-
-            {/* User Input */}
-            {loading && (
-              <form onSubmit={(e) => { e.preventDefault(); }} className="flex space-x-4">
-                <input
-                  type="text"
-                  value=""
-                  onChange={(e) => {}}
-                  placeholder={`${config.name} is connecting...`}
-                  className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg focus:border-neon-pink focus:ring-2 focus:ring-neon-pink/20 text-white placeholder-gray-400 transition-colors"
-                  disabled
-                />
-                <button
-                  type="submit"
-                  disabled
-                  className="px-6 py-3 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Send
-                </button>
-              </form>
-            )}
           </motion.div>
         )}
+
+        {/* ElevenLabs Convai Widget for Nova */}
+        {type === 'nova' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="glass-card p-4 md:p-6 mb-8"
+          >
+            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Nova - Your AI Receptionist</h2>
+            <div className="text-center">
+              <div className="w-full min-h-[600px] rounded-lg border border-neon-green/40 overflow-hidden">
+                <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
+                <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Voice-Only Notice for All Receptionists */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="glass-card p-4 mb-8 text-center"
+        >
+          <div className="text-neon-pink text-lg mb-2">🎤 Voice-Only Experience</div>
+          <p className="text-gray-400 text-sm">
+            Use the voice chat interface above to talk directly with {config.name}. No text input needed - just speak naturally and experience {config.name.toLowerCase()}'s unique personality!
+          </p>
+        </motion.div>
 
         {/* Back to Reception */}
         <motion.div
