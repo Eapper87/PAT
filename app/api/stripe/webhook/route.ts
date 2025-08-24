@@ -86,9 +86,9 @@ async function handleSubscriptionCreated(session: any) {
   // Determine credits based on price ID
   let credits = 0
   if (priceId === process.env.STRIPE_PRO_PRICE_ID) {
-    credits = 75
+    credits = 50
   } else if (priceId === process.env.STRIPE_ENTERPRISE_PRICE_ID) {
-    credits = 300
+    credits = 200
   }
 
   // Update user subscription status and credits
@@ -216,9 +216,9 @@ async function handleInvoicePaymentSucceeded(invoice: any) {
     // Determine credits based on price ID
     let credits = 0
     if (priceId === process.env.STRIPE_PRO_PRICE_ID) {
-      credits = 75
+      credits = 50
     } else if (priceId === process.env.STRIPE_ENTERPRISE_PRICE_ID) {
-      credits = 300
+      credits = 200
     }
 
     // Find user by Stripe customer ID

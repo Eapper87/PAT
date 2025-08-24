@@ -93,8 +93,8 @@
 
 ### **Subscription Plans:**
 - **Starter Plan**: Free - 3 minutes
-- **Pro Plan**: $29/month - 75 minutes
-- **Enterprise Plan**: $99/month - 300 minutes
+- **Pro Plan**: $29/month - 50 minutes
+- **Enterprise Plan**: $99/month - 200 minutes
 
 ### **Credit Packages:**
 - **Starter Pack**: $9.99 - 25 credits

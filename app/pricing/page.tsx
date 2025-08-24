@@ -46,16 +46,16 @@ export default function Pricing() {
     {
       name: 'Pro',
       price: 29,
-      credits: 75,
-      features: ['75 minutes/month', 'Exclusive AI lovers', 'Priority seduction', 'Intimate call tracking'],
+      credits: 50,
+      features: ['50 minutes/month', 'Exclusive AI lovers', 'Priority seduction', 'Intimate call tracking'],
       popular: true,
       priceId: process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID
     },
     {
       name: 'Enterprise',
       price: 99,
-      credits: 300,
-      features: ['300 minutes/month', 'Custom AI fantasies', '24/7 seduction', 'Advanced pleasure analytics', 'VIP access'],
+      credits: 200,
+      features: ['200 minutes/month', 'Custom AI fantasies', '24/7 seduction', 'Advanced pleasure analytics', 'VIP access'],
       popular: false,
       priceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_PRICE_ID
     }
