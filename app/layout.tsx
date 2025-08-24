@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Link from 'next/link'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -61,10 +62,52 @@ export default function RootLayout({
           data-domain="proposalai.space"
           src="https://datafa.st/js/script.js">
         </script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.$crisp=[];
+              window.CRISP_WEBSITE_ID="16cfb3e5-add2-42c2-ba4c-682a0c896876";
+              (function(){
+                var d=document;
+                var s=d.createElement("script");
+                s.src="https://client.crisp.chat/l.js";
+                s.async=1;
+                d.getElementsByTagName("head")[0].appendChild(s);
+              })();
+            `
+          }}
+        />
       </head>
       <body className={inter.className}>
-        <div className="min-h-screen gradient-bg">
-          {children}
+        <div className="min-h-screen gradient-bg flex flex-col">
+          <main className="flex-1">
+            {children}
+          </main>
+          
+          {/* Footer */}
+          <footer className="bg-dark-900/50 border-t border-neon-pink/20 py-6 px-6">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="text-gray-400 text-sm">
+                  © 2024 ProposalAI. All rights reserved.
+                </div>
+                <div className="flex items-center space-x-6 text-sm">
+                  <Link href="/privacy" className="text-gray-400 hover:text-neon-pink transition-colors">
+                    Privacy Policy
+                  </Link>
+                  <Link href="/terms" className="text-gray-400 hover:text-neon-pink transition-colors">
+                    Terms & Conditions
+                  </Link>
+                  <a 
+                    href="mailto:support@proposalai.space" 
+                    className="text-gray-400 hover:text-neon-pink transition-colors"
+                  >
+                    Support
+                  </a>
+                </div>
+              </div>
+            </div>
+          </footer>
         </div>
       </body>
     </html>
