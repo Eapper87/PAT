@@ -19,8 +19,6 @@ SET session_replication_role = replica;
 DO $$
 DECLARE
     user_count INTEGER;
-    table_exists BOOLEAN;
-    column_exists BOOLEAN;
 BEGIN
     -- Get user count first
     SELECT COUNT(*) INTO user_count FROM auth.users;
