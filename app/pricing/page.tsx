@@ -39,7 +39,7 @@ export default function Pricing() {
       name: 'Starter',
       price: 0,
               credits: 3,
-              features: ['3 free fantasy calls', 'Seductive AI companions', 'Email support'],
+              features: ['3 free minutes', 'Seductive AI companions', 'Email support'],
       popular: false,
       priceId: null
     },
@@ -47,7 +47,7 @@ export default function Pricing() {
       name: 'Pro',
       price: 29,
       credits: 75,
-      features: ['75 fantasy calls/month', 'Exclusive AI lovers', 'Priority seduction', 'Intimate call tracking'],
+      features: ['75 minutes/month', 'Exclusive AI lovers', 'Priority seduction', 'Intimate call tracking'],
       popular: true,
       priceId: process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID
     },
@@ -55,7 +55,7 @@ export default function Pricing() {
       name: 'Enterprise',
       price: 99,
       credits: 300,
-      features: ['300 fantasy calls/month', 'Custom AI fantasies', '24/7 seduction', 'Advanced pleasure analytics', 'VIP access'],
+      features: ['300 minutes/month', 'Custom AI fantasies', '24/7 seduction', 'Advanced pleasure analytics', 'VIP access'],
       popular: false,
       priceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_PRICE_ID
     }
@@ -218,7 +218,7 @@ export default function Pricing() {
                   ${plan.price}
                   {plan.price > 0 && <span className="text-lg text-gray-400">/month</span>}
                 </div>
-                <p className="text-gray-400">{plan.credits} credits included</p>
+                <p className="text-gray-400">{plan.credits} minutes included</p>
               </div>
 
               <ul className="space-y-3 mb-8">
@@ -285,7 +285,7 @@ export default function Pricing() {
                       {[
             {
               question: 'How do fantasy calls work?',
-              answer: 'Each credit allows you to make one seductive AI conversation. Sessions are billed per minute, with 1 credit = 1 minute of fantasy time with your chosen companion.'
+              answer: 'Each credit gives you 1 minute of seductive AI conversation time. Sessions are billed per minute, so you can have longer conversations with fewer credits or multiple shorter sessions.'
             },
             {
               question: 'Can I cancel my subscription?',

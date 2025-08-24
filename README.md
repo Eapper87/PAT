@@ -207,8 +207,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### Pricing (`/pricing`)
 - **Updated Subscription Plans**:
   - **Starter**: Free - 3 credits
-  - **Pro**: $29/month - 75 credits
-  - **Enterprise**: $99/month - 300 credits
+  - **Pro**: $29/month - 75 minutes
+- **Enterprise**: $99/month - 300 minutes
 - Credit packages for one-time purchases
 - FAQ section with comprehensive information
 - **Authentication-aware**: Maintains user login state
@@ -223,7 +223,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## 🆕 Recent Updates
 
 ### Latest Features (v1.5.0)
-- ✅ **Updated Pricing Structure**: Pro plan now 75 credits for $29, Enterprise plan 300 credits for $99
+- ✅ **Updated Pricing Structure**: Pro plan now 75 minutes for $29, Enterprise plan 300 minutes for $99
 - ✅ **ElevenLabs Integration**: Voice AI agents for all three receptionists (Raven, Orion, Nova)
 - ✅ **Enhanced AI Escort System**: Expanded to 12 AI companions (7 female, 5 male)
 - ✅ **Improved User Experience**: Better credit system and subscription management
@@ -413,7 +413,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] Escorts showcase page with gender filtering
 - [x] Personality-driven AI responses
 - [x] ElevenLabs voice integration for receptionists
-- [x] Updated credit system (75/300 credits for Pro/Enterprise)
+- [x] Updated credit system (75/300 minutes for Pro/Enterprise)
 
 ### In Progress 🚧
 - [ ] WebRTC integration for real voice calls

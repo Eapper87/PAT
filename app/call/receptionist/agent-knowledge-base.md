@@ -92,9 +92,9 @@
 ## 💰 **Pricing & Credit System**
 
 ### **Subscription Plans:**
-- **Starter Plan**: Free - 3 credits
-- **Pro Plan**: $29/month - 75 credits
-- **Enterprise Plan**: $99/month - 300 credits
+- **Starter Plan**: Free - 3 minutes
+- **Pro Plan**: $29/month - 75 minutes
+- **Enterprise Plan**: $99/month - 300 minutes
 
 ### **Credit Packages:**
 - **Starter Pack**: $9.99 - 25 credits
@@ -103,8 +103,8 @@
 - **Premium Pack**: $99.99 - 400 credits
 
 ### **Credit Usage:**
-- **Receptionist Consultation**: 1 credit per session
-- **AI Companion Calls**: 2-5 credits per hour (varies by companion)
+- **Receptionist Consultation**: 1 credit per minute
+- **AI Companion Calls**: 1 credit per minute (varies by companion)
 - **Premium Features**: Additional credits for special scenarios
 
 ### **Payment Methods:**
