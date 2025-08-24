@@ -92,9 +92,9 @@
 ## 💰 **Pricing & Credit System**
 
 ### **Subscription Plans:**
-- **Basic Plan**: $19.99/month - 100 credits
-- **Premium Plan**: $39.99/month - 250 credits
-- **Elite Plan**: $79.99/month - 600 credits
+- **Starter Plan**: Free - 3 credits
+- **Pro Plan**: $29/month - 75 credits
+- **Enterprise Plan**: $99/month - 300 credits
 
 ### **Credit Packages:**
 - **Starter Pack**: $9.99 - 25 credits

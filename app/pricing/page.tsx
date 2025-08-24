@@ -46,16 +46,16 @@ export default function Pricing() {
     {
       name: 'Pro',
       price: 29,
-      credits: 100,
-      features: ['100 credits/month', 'Premium AI agents', 'Priority support', 'Call analytics'],
+      credits: 75,
+      features: ['75 credits/month', 'Premium AI agents', 'Priority support', 'Call analytics'],
       popular: true,
       priceId: process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID
     },
     {
       name: 'Enterprise',
       price: 99,
-      credits: 500,
-      features: ['500 credits/month', 'Custom AI agents', '24/7 support', 'Advanced analytics', 'API access'],
+      credits: 300,
+      features: ['300 credits/month', 'Custom AI agents', '24/7 support', 'Advanced analytics', 'API access'],
       popular: false,
       priceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_PRICE_ID
     }
