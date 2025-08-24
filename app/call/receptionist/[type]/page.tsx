@@ -68,63 +68,20 @@ export default function ReceptionistCallPage() {
     if (type === 'raven') {
       console.log('🖤 Setting up ElevenLabs widget for Raven...')
       
-      // Initialize widget with multiple retry attempts
-      let retryCount = 0
-      const maxRetries = 3
-      
-      const initializeWidget = () => {
-        console.log(`🔄 Attempt ${retryCount + 1} to initialize widget...`)
+      const container = document.getElementById('elevenlabs-convai-widget')
+      if (container) {
+        // Clear the container
+        container.innerHTML = ''
         
-        const container = document.getElementById('elevenlabs-convai-widget')
-        if (container) {
-          // Clear the container
-          container.innerHTML = ''
-          
-          // Use the exact embed snippet as HTML
-          const embedHTML = '<elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai><script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>'
-          
-          // Inject the HTML directly
-          container.innerHTML = embedHTML
-          
-          console.log('✅ ElevenLabs embed snippet injected as HTML')
-          updateWidgetStatus(`Attempt ${retryCount + 1} - Embed snippet injected`)
-          
-          // Check if widget appeared after a delay
-          setTimeout(() => {
-            const widget = container.querySelector('elevenlabs-convai')
-            const hasWidgetContent = widget && widget.children.length > 0
-            
-            // Also check for ElevenLabs-specific content
-            const hasElevenLabsContent = container.innerHTML.includes('elevenlabs') || 
-                                       container.innerHTML.includes('convai') ||
-                                       container.querySelector('[class*="elevenlabs"]') ||
-                                       container.querySelector('[class*="convai"]')
-            
-            if (!hasWidgetContent && !hasElevenLabsContent && retryCount < maxRetries) {
-              retryCount++
-              console.log(`🔄 Widget not appearing, retry ${retryCount}/${maxRetries}...`)
-              updateWidgetStatus(`Retry ${retryCount}/${maxRetries} - Widget not appearing`)
-              
-              // Wait a bit before retrying
-              setTimeout(initializeWidget, 2000)
-            } else if (!hasWidgetContent && !hasElevenLabsContent && retryCount >= maxRetries) {
-              console.log('🔄 Max retries reached, attempting page reload...')
-              updateWidgetStatus('Max retries reached - reloading page...')
-              
-              // Final fallback: reload the page
-              setTimeout(() => {
-                window.location.reload()
-              }, 1000)
-            } else {
-              console.log('✅ Widget successfully initialized!')
-              updateWidgetStatus('Widget ready - speak to Raven!')
-            }
-          }, 3000) // Wait 3 seconds to check if widget appeared
-        }
+        // Use the exact embed snippet as HTML
+        const embedHTML = '<elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai><script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>'
+        
+        // Inject the HTML directly
+        container.innerHTML = embedHTML
+        
+        console.log('✅ ElevenLabs embed snippet injected')
+        updateWidgetStatus('Widget injected - should appear shortly')
       }
-      
-      // Start initialization
-      initializeWidget()
     }
   }, [type])
 
@@ -323,20 +280,6 @@ export default function ReceptionistCallPage() {
                   <div>Container: elevenlabs-convai-widget</div>
                   <div>Script Status: <span id="script-status">Loading...</span></div>
                   <div>Widget Status: <span id="widget-status">Initializing...</span></div>
-                </div>
-                
-                {/* Manual Reload Button */}
-                <div className="mt-3 text-center">
-                  <button
-                    onClick={() => {
-                      console.log('🔄 Manual page reload requested...')
-                      updateWidgetStatus('Manual reload...')
-                      window.location.reload()
-                    }}
-                    className="px-4 py-2 bg-neon-pink text-dark-900 rounded-lg hover:bg-neon-pink/80 transition-colors text-sm"
-                  >
-                    🔄 Reload Page
-                  </button>
                 </div>
               </div>
             </div>
