@@ -116,7 +116,7 @@ export default function ReceptionPage() {
                 personality: "Mysterious & Seductive",
                 description: "Dark, mysterious, and takes control of your fantasies",
                 icon: "🖤",
-                route: "/call/receptionist",
+                route: "/call/receptionist/raven",
                 color: "border-neon-pink"
               },
               {
@@ -124,7 +124,7 @@ export default function ReceptionPage() {
                 personality: "Strong & Protective",
                 description: "Masculine energy, protective, and makes you feel safe",
                 icon: "💙",
-                route: "/call/orion",
+                route: "/call/receptionist/orion",
                 color: "border-neon-blue"
               },
               {
@@ -132,7 +132,7 @@ export default function ReceptionPage() {
                 personality: "Quirky & Playful",
                 description: "Fun, unpredictable, and absolutely fabulous",
                 icon: "🌈",
-                route: "/call/nova",
+                route: "/call/receptionist/nova",
                 color: "border-neon-green"
               }
             ].map((receptionist, index) => (

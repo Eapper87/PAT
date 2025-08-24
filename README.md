@@ -1,16 +1,17 @@
 # ProposalAI 🚀
 
-A modern, AI-powered voice connection service that recreates the experience of calling into a live receptionist center, powered entirely by AI voice agents.
+A modern, AI-powered fantasy companion service featuring multiple AI receptionists and specialized AI escorts, powered by intelligent conversational agents.
 
 ## ✨ Features
 
-- **AI Receptionist**: Intelligent AI agent that greets users and routes them to specialists
-- **Specialized Workers**: Connect with AI agents trained for specific tasks and industries
-- **Real-time Voice Calls**: Web-based calling interface with call management
+- **Multiple AI Receptionists**: Choose from 3 unique personalities (Raven, Orion, Nova)
+- **AI Escort Companions**: 10+ specialized AI companions with unique personalities
+- **Interactive Conversations**: Real-time AI chat with personality-driven responses
 - **Credit System**: Pay-per-minute or subscription-based credit system
 - **Modern UI/UX**: Cyberpunk-inspired design with neon accents and smooth animations
 - **Admin Panel**: Comprehensive management system for AI agents and user monitoring
 - **Stripe Integration**: Secure payment processing for subscriptions and credit purchases
+- **Authentication System**: Secure user management with Supabase Auth
 
 ## 🛠️ Tech Stack
 
@@ -35,7 +36,7 @@ A modern, AI-powered voice connection service that recreates the experience of c
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/proposalai.git
+git clone https://github.com/Eapper87/PAT.git
 cd proposalai
 ```
 
@@ -162,25 +163,39 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### Landing Page (`/`)
 - Hero section with animated elements
 - Feature highlights
-- Call-to-action buttons
+- Call-to-action buttons linking to reception
 
 ### Authentication
 - **Sign Up** (`/signup`): User registration with Supabase Auth
-- **Login** (`/login`): User authentication
+- **Login** (`/login`): User authentication with redirect handling
 - **Dashboard** (`/dashboard`): Protected user dashboard
 
 ### User Dashboard
 - Credit balance display
-- Call initiation
-- Quick actions grid
+- Quick actions grid (Visit Reception, Fantasy History, Buy Credits)
 - Usage statistics
 - **Call History**: View and manage past conversations
 
-### Call Interface (`/call/[id]`)
-- Real-time call management
-- Agent information display
-- Call controls (end, pause, mute)
-- Conversation transcript
+### Reception System (`/reception`)
+- **Multiple AI Receptionists**: Choose from 3 unique personalities
+- **Raven** 🖤: Mysterious & Seductive (Female)
+- **Orion** 💙: Strong & Protective (Male)
+- **Nova** 🌈: Quirky & Playful (Gender-fluid)
+- Each receptionist has unique conversation styles and responses
+
+### AI Escort Companions
+- **10+ Specialized AI Companions** with unique personalities
+- **Female Companions**: Serena, Luna, Phoenix, Jade, Misty, Scarlet, Violet
+- **Male Companions**: Atlas, Kai
+- **Personality Types**: Mysterious, Romantic, Fiery, Sophisticated, Mystical, Confident, Playful, Strong, Protective
+- **Escorts Showcase** (`/escorts`): Browse all companions with filtering
+
+### Call Interfaces
+- **Receptionist Calls**: `/call/receptionist`, `/call/orion`, `/call/nova`
+- **Escort Calls**: `/call/serena`, `/call/luna`, `/call/phoenix`, etc.
+- Real-time AI conversation management
+- Personality-driven responses and interactions
+- Call controls and conversation history
 
 ### Call History (`/history`)
 - Complete call history and analytics
@@ -203,7 +218,21 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🆕 Recent Updates
 
-### Latest Features (v1.1.0)
+### Latest Features (v1.4.0)
+- ✅ **Multiple Receptionist System**: 3 unique AI receptionists with different personalities
+- ✅ **AI Escort Companions**: 10+ specialized AI companions with unique traits
+- ✅ **Escorts Showcase Page**: Browse and filter all available companions
+- ✅ **Enhanced Reception Experience**: Choose your preferred receptionist personality
+- ✅ **Improved User Dashboard**: Streamlined navigation and quick actions
+- ✅ **Personality-Driven AI**: Each AI has unique conversation styles and responses
+
+### Previous Updates (v1.3.0)
+- ✅ **AI Escort System**: Created 10 diverse AI escort pages (7 female, 3 male)
+- ✅ **Main Escorts Showcase**: Added `/escorts` page with gender filtering
+- ✅ **Browse All Companions**: Added button to reception page
+- ✅ **All pages authentication-aware**: Properly secured and user-specific
+
+### Core Features (v1.1.0)
 - ✅ **Call History Page**: Complete user call history with analytics
 - ✅ **Enhanced Authentication**: Improved login flow with redirect handling
 - ✅ **Fixed Pricing Authentication**: Users no longer logged out when accessing pricing
@@ -265,12 +294,19 @@ colors: {
 }
 ```
 
-### Adding New AI Agents
+### Adding New AI Companions
 
-1. Use the admin panel to add new agents
-2. Configure voice IDs and personas
-3. Set availability status
-4. Agents automatically appear in the system
+1. Use the existing template system in `app/call/[name]/page.tsx`
+2. Customize personality, responses, and conversation style
+3. Add to the escorts array in `/escorts` page
+4. Update receptionist routing if needed
+
+### Adding New Receptionists
+
+1. Create new receptionist page in `app/call/[name]/page.tsx`
+2. Update reception page selection array
+3. Ensure unique personality and conversation style
+4. Add to navigation and routing
 
 ## 📊 Database Schema
 
@@ -294,8 +330,7 @@ colors: {
 - Secure API routes
 - Input validation and sanitization
 - CORS protection
-
-## 🧪 Testing
+- Authentication-aware pages
 
 ## 🔧 Troubleshooting
 
@@ -356,12 +391,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Completed ✅
 - [x] User authentication system
-- [x] AI agent management
+- [x] Multiple AI receptionist system (3 personalities)
+- [x] AI escort companion system (10+ personalities)
+- [x] Interactive conversation interfaces
 - [x] Call interface and management
 - [x] Stripe payment integration
 - [x] Call history and analytics
 - [x] Pricing page with authentication
 - [x] Admin dashboard
+- [x] Escorts showcase page
+- [x] Personality-driven AI responses
 
 ### In Progress 🚧
 - [ ] WebRTC integration for real voice calls
@@ -369,18 +408,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] Advanced analytics dashboard
 
 ### Planned 🎯
+- [ ] Expand to 20-30 AI escort companions
 - [ ] Mobile app development
 - [ ] Multi-language support
 - [ ] Enterprise features
+- [ ] Advanced AI personality customization
 
 ## 🙏 Acknowledgments
 
 - Built with Next.js and Supabase
 - Styled with Tailwind CSS
 - Animated with Framer Motion
-- Powered by AI voice technology
+- Powered by AI conversational technology
+- Multiple AI personalities for diverse user experiences
 
 ---
 
-**ProposalAI** - The future of AI communication is here! 🚀
+**ProposalAI** - The future of AI companionship is here! 🚀💋
 
