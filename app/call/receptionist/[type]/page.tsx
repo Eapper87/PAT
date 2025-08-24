@@ -39,7 +39,7 @@ const receptionistConfigs: Record<string, ReceptionistConfig> = {
     name: "Orion",
     emoji: "💙",
     personality: "Strong & Protective",
-    greeting: "Hey there, beautiful... 💙 I'm Orion, your protective AI receptionist. I'm here to make sure you get exactly what you need and feel safe while we explore your fantasies. What kind of companion are you looking for today?",
+    greeting: "Hey there, beautiful... 💙 Welcome to Fantasy Central. I'm Orion, your protective AI receptionist, and I'm here to make sure you get exactly what you need and feel safe while we explore your fantasies. What kind of companion are you looking for today?",
     color: "border-neon-blue",
     traits: ["Strong", "Protective", "Masculine", "Caring", "Safe"]
   },
@@ -47,7 +47,7 @@ const receptionistConfigs: Record<string, ReceptionistConfig> = {
     name: "Nova",
     emoji: "🌈",
     personality: "Quirky & Playful",
-    greeting: "OMG! Hi there, you gorgeous human! 🌈 I'm Nova, your totally quirky and absolutely fabulous AI receptionist! I'm like, SO excited to help you find the perfect companion! What kind of amazing experience are you looking for today? *bounces excitedly*",
+    greeting: "OMG! Hi there, you gorgeous human! 🌈 Welcome to Fantasy Central! I'm Nova, your totally quirky and absolutely fabulous AI receptionist! I'm like, SO excited to help you find the perfect companion! What kind of amazing experience are you looking for today? *bounces excitedly*",
     color: "border-neon-green",
     traits: ["Fun", "Playful", "Spontaneous", "Adventurous", "Fabulous"]
   }
@@ -184,7 +184,7 @@ export default function ReceptionistCallPage() {
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Orion - Your AI Receptionist</h2>
             <div className="text-center">
               <div className="w-full min-h-[600px] rounded-lg border border-neon-blue/40 overflow-hidden">
-                <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
+                <elevenlabs-convai agent-id="agent_8601k3eeze9aftrbtc7twm7xsfa4"></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
             </div>
@@ -202,7 +202,7 @@ export default function ReceptionistCallPage() {
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Nova - Your AI Receptionist</h2>
             <div className="text-center">
               <div className="w-full min-h-[600px] rounded-lg border border-neon-green/40 overflow-hidden">
-                <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
+                <elevenlabs-convai agent-id="agent_0401k3ef8wcvfpmvqvcas62ewkgf"></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
             </div>
