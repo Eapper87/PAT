@@ -105,6 +105,7 @@ export default function ReceptionistCallPage() {
     console.log('🎧 [ElevenLabs] Setting up widget state monitoring...')
     
     let checkInterval: NodeJS.Timeout
+    let lastWidgetHTML = ''
     
     const monitorWidgetState = () => {
       const widget = document.querySelector('elevenlabs-convai')
@@ -113,6 +114,15 @@ export default function ReceptionistCallPage() {
         
         // Check for active call indicators in the widget
         const checkCallState = () => {
+          // Debug: Log all elements in the widget to see what's available
+          const allElements = widget.querySelectorAll('*')
+          const elementClasses = Array.from(allElements).map(el => ({
+            tag: el.tagName,
+            classes: Array.from(el.classList),
+            id: el.id,
+            attributes: Array.from(el.attributes).map(attr => `${attr.name}="${attr.value}"`)
+          }))
+          
           // Look for common call state indicators in the widget
           const hasActiveCall = widget.querySelector('[data-call-active], .call-active, .recording, .speaking') !== null
           const hasMicrophoneActive = widget.querySelector('.mic-active, .recording-indicator, [aria-label*="recording"]') !== null
@@ -121,6 +131,18 @@ export default function ReceptionistCallPage() {
           
           // Check if any call activity is happening
           const isCallInProgress = hasActiveCall || hasMicrophoneActive || hasAudioPlaying || hasUserSpeaking
+          
+          // Log detailed widget state every 5 seconds for debugging
+          if (Date.now() % 5000 < 1000) {
+            console.log('🔍 [ElevenLabs] Widget debug - Elements found:', elementClasses.length)
+            console.log('🔍 [ElevenLabs] Widget debug - Call indicators:', {
+              hasActiveCall,
+              hasMicrophoneActive,
+              hasAudioPlaying,
+              hasUserSpeaking,
+              isCallInProgress
+            })
+          }
           
           if (isCallInProgress) {
             if (!isCallActive) {
