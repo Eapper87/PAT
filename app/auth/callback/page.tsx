@@ -42,7 +42,6 @@ function AuthCallbackContent() {
                   {
                     id: data.session.user.id,
                     email: data.session.user.email,
-                    credits: 3,
                     subscription_status: 'inactive'
                   }
                 ])

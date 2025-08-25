@@ -33,12 +33,12 @@ export default function TermsPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-neon-pink mb-4">Service Description</h2>
-              <p>ProposalAI provides AI-powered adult entertainment services through conversational AI companions. Our service includes:</p>
+              <p>ProposalAI provides AI-powered voice conversation experiences:</p>
               <ul className="list-disc list-inside space-y-2 ml-4 mt-3">
-                <li>AI receptionist services for fantasy guidance</li>
-                <li>AI companion conversations and roleplay</li>
-                <li>Voice integration through ElevenLabs</li>
-                <li>Credit-based usage system</li>
+                <li>Voice-based AI receptionists for adult entertainment</li>
+                <li>Real-time conversation capabilities</li>
+                <li>Multiple AI personalities to choose from</li>
+                <li>Secure and private voice interactions</li>
               </ul>
             </section>
 
@@ -61,18 +61,6 @@ export default function TermsPage() {
                 <li>Maintain the security of your account credentials</li>
                 <li>Accept responsibility for all activities under your account</li>
                 <li>Notify us immediately of any unauthorized use</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-neon-pink mb-4">Payment Terms</h2>
-              <p>Our services operate on a credit-based system:</p>
-              <ul className="list-disc list-inside space-y-2 ml-4 mt-3">
-                <li>Credits are purchased through Stripe payment processing</li>
-                <li>1 credit equals 1 minute of conversation time</li>
-                <li>Subscription plans provide monthly credit allocations</li>
-                <li>All payments are non-refundable unless required by law</li>
-                <li>Prices are subject to change with 30 days notice</li>
               </ul>
             </section>
 

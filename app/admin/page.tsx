@@ -279,7 +279,6 @@ export default function AdminPage() {
                 <tr className="border-b border-gray-600">
                   <th className="text-left p-2 text-gray-400">Email</th>
                   <th className="text-left p-2 text-gray-400">Role</th>
-                  <th className="text-left p-2 text-gray-400">Credits</th>
                   <th className="text-left p-2 text-gray-400">Subscription</th>
                   <th className="text-left p-2 text-gray-400">Joined</th>
                 </tr>
@@ -289,7 +288,6 @@ export default function AdminPage() {
                   <tr key={user.id} className="border-b border-gray-700">
                     <td className="p-2 text-white">{user.email}</td>
                     <td className="p-2 text-neon-blue capitalize">{user.role}</td>
-                    <td className="p-2 text-neon-green">{user.credits}</td>
                     <td className="p-2">
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         user.subscription_status === 'active' 
@@ -325,7 +323,6 @@ export default function AdminPage() {
                   <th className="text-left p-2 text-gray-400">User</th>
                   <th className="text-left p-2 text-gray-400">Agent</th>
                   <th className="text-left p-2 text-gray-400">Duration</th>
-                  <th className="text-left p-2 text-gray-400">Cost</th>
                   <th className="text-left p-2 text-gray-400">Status</th>
                   <th className="text-left p-2 text-gray-400">Date</th>
                 </tr>
@@ -336,7 +333,6 @@ export default function AdminPage() {
                     <td className="p-2 text-white">{call.user_id.slice(0, 8)}...</td>
                     <td className="p-2 text-neon-blue">{call.agent_id}</td>
                     <td className="p-2 text-gray-300">{call.duration}s</td>
-                    <td className="p-2 text-neon-green">{call.cost} credits</td>
                     <td className="p-2">
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         call.status === 'completed' 

@@ -45,7 +45,6 @@ export default function Dashboard() {
                 {
                   id: authUser.id,
                   email: authUser.email,
-                  credits: 5,
                   subscription_status: 'inactive'
                 }
               ])
@@ -89,8 +88,6 @@ export default function Dashboard() {
     router.push('/')
   }
 
-
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -128,12 +125,12 @@ export default function Dashboard() {
           Welcome back, {user.email?.split('@')[0]}! 🔥
         </h1>
         <p className="text-gray-400">
-          Ready to connect with your AI companion? You have {user.credits} credits remaining.
+          Ready to meet your AI receptionist? Choose from our seductive AI companions below.
         </p>
       </motion.div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -154,85 +151,54 @@ export default function Dashboard() {
           transition={{ delay: 0.2 }}
           className="glass-card p-6 text-center"
         >
-          <div className="text-4xl mb-4">📊</div>
-          <h3 className="text-xl font-semibold mb-2 text-neon-green">Fantasy History</h3>
-          <p className="text-gray-400 mb-4">View your past intimate conversations</p>
-          <Link href="/history" className="cyber-button w-full block text-center">
-            View History
-          </Link>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="glass-card p-6 text-center"
-        >
-          <div className="text-4xl mb-4">💳</div>
-          <h3 className="text-xl font-semibold mb-2 text-neon-blue">Buy Credits</h3>
-          <p className="text-gray-400 mb-4">Purchase more call credits</p>
-          <Link href="/pricing" className="cyber-button w-full block text-center">
-            View Plans
+          <div className="text-4xl mb-4">🏠</div>
+          <h3 className="text-xl font-semibold mb-2 text-neon-green">Go Home</h3>
+          <p className="text-gray-400 mb-4">Return to the main page</p>
+          <Link href="/" className="cyber-button w-full block text-center">
+            Go Home
           </Link>
         </motion.div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 }}
-          className="glass-card p-6 text-center"
-        >
-          <div className="text-2xl font-bold text-neon-pink">{user.credits}</div>
-          <div className="text-gray-400 text-sm">Credits Remaining</div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5 }}
-          className="glass-card p-6 text-center"
-        >
-          <div className="text-2xl font-bold text-neon-blue">
-            {user.subscription_status === 'active' ? 'Active' : 'Inactive'}
-          </div>
-          <div className="text-gray-400 text-sm">Subscription</div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6 }}
-          className="glass-card p-6 text-center"
-        >
-          <div className="text-2xl font-bold text-neon-green">0</div>
-          <div className="text-gray-400 text-sm">Fantasies Today</div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.7 }}
-          className="glass-card p-6 text-center"
-        >
-          <div className="text-2xl font-bold text-neon-purple">0</div>
-          <div className="text-gray-400 text-sm">Total Minutes</div>
-        </motion.div>
-      </div>
-
-      {/* Recent Activity */}
+      {/* AI Receptionists Preview */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="glass-card p-6"
+        transition={{ delay: 0.3 }}
+        className="glass-card p-6 mb-8"
       >
-        <h3 className="text-xl font-semibold mb-4 text-white">Recent Activity</h3>
-        <div className="text-gray-400 text-center py-8">
-          <div className="text-4xl mb-2">🔥</div>
-          <p>No fantasies yet. Start your first intimate conversation!</p>
+        <h3 className="text-xl font-semibold mb-4 text-white">Your AI Receptionists</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="text-center p-4 border border-neon-pink/30 rounded-lg">
+            <div className="text-3xl mb-2">🖤</div>
+            <div className="font-semibold text-neon-pink">Raven</div>
+            <div className="text-sm text-gray-400">Mysterious & Seductive</div>
+          </div>
+          <div className="text-center p-4 border border-neon-blue/30 rounded-lg">
+            <div className="text-3xl mb-2">💙</div>
+            <div className="font-semibold text-neon-blue">Orion</div>
+            <div className="text-sm text-gray-400">Strong & Protective</div>
+          </div>
+          <div className="text-center p-4 border border-neon-green/30 rounded-lg">
+            <div className="text-3xl mb-2">🌈</div>
+            <div className="font-semibold text-neon-green">Nova</div>
+            <div className="text-sm text-gray-400">Quirky & Playful</div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Getting Started */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="glass-card p-6 text-center"
+      >
+        <h3 className="text-xl font-semibold mb-4 text-white">Getting Started</h3>
+        <div className="text-gray-400">
+          <div className="text-4xl mb-2">🎤</div>
+          <p>Click "Go to Reception" above to start chatting with your AI companions!</p>
+          <p className="text-sm mt-2">Voice-only experience - just speak naturally!</p>
         </div>
       </motion.div>
     </div>

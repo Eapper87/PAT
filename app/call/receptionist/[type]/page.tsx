@@ -1,10 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { CallSessionManager, CallSession } from '@/lib/callSessionManager'
 import Link from 'next/link'
 
 // TypeScript declaration for ElevenLabs custom element
@@ -57,13 +56,9 @@ const receptionistConfigs: Record<string, ReceptionistConfig> = {
 export default function ReceptionistCallPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [callSession, setCallSession] = useState<CallSession | null>(null)
-  const [creditsRemaining, setCreditsRemaining] = useState<number>(0)
-  const [isCallActive, setIsCallActive] = useState(false)
   const router = useRouter()
   const params = useParams()
   const type = params.type as string
-  const sessionManagerRef = useRef<CallSessionManager | null>(null)
 
   const config = receptionistConfigs[type]
 
@@ -75,221 +70,22 @@ export default function ReceptionistCallPage() {
     checkUser()
   }, [type, config])
 
-  useEffect(() => {
-    if (user && !sessionManagerRef.current) {
-      console.log('🔧 [Receptionist] Initializing CallSessionManager...', {
-        userId: user.id,
-        timestamp: new Date().toISOString()
-      })
-      
-      sessionManagerRef.current = new CallSessionManager(
-        user.id,
-        handleStatusUpdate,
-        handleCallEnded,
-        handleError
-      )
-      
-      console.log('✅ [Receptionist] CallSessionManager initialized successfully')
-    }
-
-    return () => {
-      if (sessionManagerRef.current) {
-        console.log('🧹 [Receptionist] Cleaning up CallSessionManager...')
-        sessionManagerRef.current.destroy()
-      }
-    }
-  }, [user])
-
-  // Monitor ElevenLabs widget state for call detection
-  useEffect(() => {
-    console.log('🎧 [ElevenLabs] Setting up widget state monitoring...')
-    
-    let checkInterval: NodeJS.Timeout
-    let widgetLoadCheckInterval: NodeJS.Timeout
-    
-    const waitForWidgetToLoad = () => {
-      const widget = document.querySelector('elevenlabs-convai')
-      if (widget) {
-        // Check if widget has actual content (not just empty shell)
-        const hasContent = widget.children.length > 0 || widget.innerHTML.trim().length > 0
-        
-        if (hasContent) {
-          console.log('🎉 [ElevenLabs] Widget fully loaded with content, starting monitoring...')
-          clearInterval(widgetLoadCheckInterval)
-          startWidgetMonitoring(widget)
-        } else {
-          console.log('⏳ [ElevenLabs] Widget found but still loading content...')
-        }
-      }
-    }
-    
-    const startWidgetMonitoring = (widget: Element) => {
-      console.log('🎤 [ElevenLabs] Widget monitoring started for loaded widget...')
-      
-      // Check for active call indicators in the widget
-      const checkCallState = () => {
-        // Debug: Log all elements in the widget to see what's available
-        const allElements = widget.querySelectorAll('*')
-        const elementClasses = Array.from(allElements).map(el => ({
-          tag: el.tagName,
-          classes: Array.from(el.classList),
-          id: el.id,
-          attributes: Array.from(el.attributes).map(attr => `${attr.name}="${attr.value}"`)
-        }))
-        
-        // Look for common call state indicators in the widget
-        const hasActiveCall = widget.querySelector('[data-call-active], .call-active, .recording, .speaking') !== null
-        const hasMicrophoneActive = widget.querySelector('.mic-active, .recording-indicator, [aria-label*="recording"]') !== null
-        const hasAudioPlaying = widget.querySelector('audio[src], .audio-playing, [data-audio-active]') !== null
-        const hasUserSpeaking = widget.querySelector('.user-speaking, .input-active, [data-user-input]') !== null
-        
-        // Check if any call activity is happening
-        const isCallInProgress = hasActiveCall || hasMicrophoneActive || hasAudioPlaying || hasUserSpeaking
-        
-        // Log detailed widget state every 5 seconds for debugging
-        if (Date.now() % 5000 < 1000) {
-          console.log('🔍 [ElevenLabs] Widget debug - Elements found:', elementClasses.length)
-          console.log('🔍 [ElevenLabs] Widget debug - Call indicators:', {
-            hasActiveCall,
-            hasMicrophoneActive,
-            hasAudioPlaying,
-            hasUserSpeaking,
-            isCallInProgress
-          })
-        }
-        
-        if (isCallInProgress) {
-          if (!isCallActive) {
-            console.log('🎬 [ElevenLabs] Call activity detected in widget:', {
-              hasActiveCall,
-              hasMicrophoneActive,
-              hasAudioPlaying,
-              hasUserSpeaking
-            })
-            startCallSession()
-          }
-        } else {
-          if (isCallActive) {
-            console.log('🛑 [ElevenLabs] Call activity ended in widget, ending session...')
-            endCallSession()
-          }
-        }
-      }
-      
-      // Check every 1 second for call state changes
-      checkInterval = setInterval(checkCallState, 1000)
-      console.log('✅ [ElevenLabs] Widget monitoring active')
-    }
-    
-    // Wait for widget to load content (check every 500ms)
-    widgetLoadCheckInterval = setInterval(waitForWidgetToLoad, 500)
-    
-    // Also do initial check
-    waitForWidgetToLoad()
-    
-    return () => {
-      if (checkInterval) clearInterval(checkInterval)
-      if (widgetLoadCheckInterval) clearInterval(widgetLoadCheckInterval)
-      console.log('🧹 [ElevenLabs] Widget monitoring cleaned up')
-    }
-  }, [isCallActive, user])
-
   const checkUser = async () => {
     try {
-      console.log('🔍 [Receptionist] Checking user authentication...')
-      
       const { data: { user: authUser }, error } = await supabase.auth.getUser()
       
       if (error || !authUser) {
-        console.error('❌ [Receptionist] User not authenticated:', { error })
         router.push('/login?redirect=reception')
         return
       }
-
-      console.log('✅ [Receptionist] User authenticated:', { 
-        userId: authUser.id, 
-        email: authUser.email 
-      })
 
       setUser(authUser)
       setLoading(false)
 
     } catch (error) {
-      console.error('💥 [Receptionist] Error checking user:', error)
+      console.error('Error checking user:', error)
       router.push('/login')
     }
-  }
-
-  const startCallSession = async () => {
-    try {
-      console.log('🎬 [Receptionist] Starting call session...', {
-        type,
-        userId: user?.id,
-        timestamp: new Date().toISOString()
-      })
-
-      if (!sessionManagerRef.current) {
-        console.error('❌ [Receptionist] No session manager available')
-        return
-      }
-
-      // Start call session with receptionist agent ID
-      const agentId = `receptionist-${type}`
-      console.log('🎯 [Receptionist] Using agent ID:', agentId)
-      
-      const session = await sessionManagerRef.current.startCall(agentId)
-      console.log('✅ [Receptionist] Call session started:', session)
-      
-      setCallSession(session)
-      setCreditsRemaining(session.creditsRemaining)
-      setIsCallActive(true)
-      
-      console.log('🎉 [Receptionist] Call session state updated:', {
-        isCallActive: true,
-        creditsRemaining: session.creditsRemaining
-      })
-      
-    } catch (error: any) {
-      console.error('💥 [Receptionist] Error starting call session:', error)
-      if (error.message.includes('Insufficient credits')) {
-        console.log('💰 [Receptionist] Redirecting to pricing due to insufficient credits')
-        router.push('/pricing?error=insufficient_credits')
-      }
-    }
-  }
-
-  const endCallSession = async () => {
-    try {
-      console.log('🛑 [Receptionist] Ending call session...', {
-        type,
-        userId: user?.id,
-        timestamp: new Date().toISOString()
-      })
-
-      if (sessionManagerRef.current) {
-        await sessionManagerRef.current.endCall()
-        setIsCallActive(false)
-        console.log('✅ [Receptionist] Call session ended successfully')
-      } else {
-        console.warn('⚠️ [Receptionist] No session manager available for ending call')
-      }
-    } catch (error) {
-      console.error('💥 [Receptionist] Error ending call session:', error)
-    }
-  }
-
-  const handleStatusUpdate = (session: CallSession) => {
-    setCallSession(session)
-    setCreditsRemaining(session.creditsRemaining)
-  }
-
-  const handleCallEnded = (session: CallSession) => {
-    setCallSession(session)
-    setIsCallActive(false)
-  }
-
-  const handleError = (error: string) => {
-    console.error('Call session error:', error)
   }
 
   if (!config) {
@@ -324,33 +120,9 @@ export default function ReceptionistCallPage() {
         <Link href="/reception" className="text-2xl font-cyber font-bold neon-text">
           {config.emoji} {config.name}
         </Link>
-        <div className="flex items-center space-x-4">
-          {/* Credit Display */}
-          {isCallActive && callSession && (
-            <div className="text-right">
-              <div className="text-sm text-gray-400">Credits Remaining</div>
-              <div className="text-xl font-mono text-neon-pink">{creditsRemaining}</div>
-            </div>
-          )}
-          {/* Call Duration */}
-          {isCallActive && callSession && (
-            <div className="text-right">
-              <div className="text-sm text-gray-400">Call Duration</div>
-              <div className="text-xl font-mono text-neon-blue">
-                {Math.floor(callSession.serverDuration / 60)}:{(callSession.serverDuration % 60).toString().padStart(2, '0')}
-              </div>
-            </div>
-          )}
-          <div className="text-white">
-            <span className="text-gray-400">Status: </span>
-            <span className={`${
-              loading ? 'text-yellow-400' : 
-              isCallActive ? 'text-neon-green' : 'text-gray-400'
-            }`}>
-              {loading ? 'Connecting...' : 
-               isCallActive ? 'Active Call' : 'Ready'}
-            </span>
-          </div>
+        <div className="text-white">
+          <span className="text-gray-400">Status: </span>
+          <span className="text-neon-green">Ready to Chat</span>
         </div>
       </header>
 
@@ -381,43 +153,27 @@ export default function ReceptionistCallPage() {
               </span>
             ))}
           </div>
-          
-          {/* Credit Usage Progress */}
-          {isCallActive && callSession && (
-            <div className="mt-6">
-              <div className="flex justify-between text-sm text-gray-400 mb-2">
-                <span>Credits Used: {callSession.creditsUsed}</span>
-                <span>Total Cost: {callSession.cost}</span>
-              </div>
-              <div className="w-full bg-dark-700 rounded-full h-2">
-                <div 
-                  className="bg-neon-pink h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.min(100, (callSession.creditsUsed / Math.max(1, callSession.cost)) * 100)}%` }}
-                ></div>
-              </div>
-            </div>
-          )}
         </motion.div>
 
-                 {/* ElevenLabs Convai Widget for Raven */}
-         {type === 'raven' && (
-           <motion.div
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ delay: 0.2 }}
-             className="glass-card p-4 md:p-6 mb-8"
-           >
-             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Mistress of Welcome</h2>
-             <div className="text-center">
-               <div className="w-full min-h-[600px] rounded-lg border border-neon-pink/40 overflow-hidden">
-                 <elevenlabs-convai 
-                   agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
-                 ></elevenlabs-convai>
-                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-               </div>
-             </div>
-           </motion.div>
-         )}
+        {/* ElevenLabs Convai Widget for Raven */}
+        {type === 'raven' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="glass-card p-4 md:p-6 mb-8"
+          >
+            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Mistress of Welcome</h2>
+            <div className="text-center">
+              <div className="w-full min-h-[600px] rounded-lg border border-neon-pink/40 overflow-hidden">
+                <elevenlabs-convai 
+                  agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
+                ></elevenlabs-convai>
+                <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* ElevenLabs Convai Widget for Orion */}
         {type === 'orion' && (
@@ -459,7 +215,7 @@ export default function ReceptionistCallPage() {
           </motion.div>
         )}
 
-        {/* Voice-Only Notice for All Receptionists */}
+        {/* Voice-Only Notice */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -470,12 +226,6 @@ export default function ReceptionistCallPage() {
           <p className="text-gray-400 text-sm">
             Use the voice chat interface above to talk directly with {config.name}. No text input needed - just speak naturally and experience {config.name.toLowerCase()}'s unique personality!
           </p>
-          {isCallActive && (
-            <div className="mt-4 p-3 bg-neon-pink/20 border border-neon-pink/40 rounded-lg">
-              <div className="text-neon-pink font-semibold">Active Call</div>
-              <div className="text-sm text-gray-300">Credits are being consumed as you talk</div>
-            </div>
-          )}
         </motion.div>
 
         {/* Back to Reception */}
