@@ -13,6 +13,8 @@ declare global {
     interface IntrinsicElements {
       'elevenlabs-convai': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         'agent-id': string
+        'onConvaiStart': () => void
+        'onConvaiEnd': () => void
       }
     }
   }
@@ -92,29 +94,7 @@ export default function ReceptionistCallPage() {
     }
   }, [user])
 
-  // Handle ElevenLabs Convai events
-  useEffect(() => {
-    const handleConvaiStart = () => {
-      if (sessionManagerRef.current && user) {
-        startCallSession()
-      }
-    }
-
-    const handleConvaiEnd = () => {
-      if (sessionManagerRef.current) {
-        endCallSession()
-      }
-    }
-
-    // Listen for ElevenLabs Convai events
-    window.addEventListener('convai-start', handleConvaiStart)
-    window.addEventListener('convai-end', handleConvaiEnd)
-
-    return () => {
-      window.removeEventListener('convai-start', handleConvaiStart)
-      window.removeEventListener('convai-end', handleConvaiEnd)
-    }
-  }, [user])
+  // ElevenLabs Convai events are now handled directly by the widget components
 
   const checkUser = async () => {
     try {
@@ -139,7 +119,7 @@ export default function ReceptionistCallPage() {
       if (!sessionManagerRef.current) return
 
       // Start call session with receptionist agent ID
-      const session = await sessionManagerRef.current.startCall('receptionist-agent-id')
+      const session = await sessionManagerRef.current.startCall(`receptionist-${type}`)
       setCallSession(session)
       setCreditsRemaining(session.creditsRemaining)
       setIsCallActive(true)
@@ -294,7 +274,19 @@ export default function ReceptionistCallPage() {
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Mistress of Welcome</h2>
             <div className="text-center">
               <div className="w-full min-h-[600px] rounded-lg border border-neon-pink/40 overflow-hidden">
-                <elevenlabs-convai agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"></elevenlabs-convai>
+                <elevenlabs-convai 
+                  agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
+                  onConvaiStart={() => {
+                    if (sessionManagerRef.current && user) {
+                      startCallSession()
+                    }
+                  }}
+                  onConvaiEnd={() => {
+                    if (sessionManagerRef.current) {
+                      endCallSession()
+                    }
+                  }}
+                ></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
             </div>
@@ -312,7 +304,19 @@ export default function ReceptionistCallPage() {
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Orion - Your AI Pleasure Concierge</h2>
             <div className="text-center">
               <div className="w-full min-h-[600px] rounded-lg border border-neon-blue/40 overflow-hidden">
-                <elevenlabs-convai agent-id="agent_8601k3eeze9aftrbtc7twm7xsfa4"></elevenlabs-convai>
+                <elevenlabs-convai 
+                  agent-id="agent_8601k3eeze9aftrbtc7twm7xsfa4"
+                  onConvaiStart={() => {
+                    if (sessionManagerRef.current && user) {
+                      startCallSession()
+                    }
+                  }}
+                  onConvaiEnd={() => {
+                    if (sessionManagerRef.current) {
+                      endCallSession()
+                    }
+                  }}
+                ></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
             </div>
@@ -330,7 +334,19 @@ export default function ReceptionistCallPage() {
             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Nova - Your AI Gatekeeper</h2>
             <div className="text-center">
               <div className="w-full min-h-[600px] rounded-lg border border-neon-green/40 overflow-hidden">
-                <elevenlabs-convai agent-id="agent_0401k3ef8wcvfpmvqvcas62ewkgf"></elevenlabs-convai>
+                <elevenlabs-convai 
+                  agent-id="agent_0401k3ef8wcvfpmvqvcas62ewkgf"
+                  onConvaiStart={() => {
+                    if (sessionManagerRef.current && user) {
+                      startCallSession()
+                    }
+                  }}
+                  onConvaiEnd={() => {
+                    if (sessionManagerRef.current) {
+                      endCallSession()
+                    }
+                  }}
+                ></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
             </div>
