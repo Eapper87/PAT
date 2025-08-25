@@ -130,7 +130,7 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -142,20 +142,6 @@ export default function Dashboard() {
           <p className="text-gray-400 mb-4">Meet your seductive AI receptionist</p>
           <Link href="/reception" className="cyber-button w-full block text-center">
             Go to Reception
-          </Link>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="glass-card p-6 text-center"
-        >
-          <div className="text-4xl mb-4">🏠</div>
-          <h3 className="text-xl font-semibold mb-2 text-neon-green">Go Home</h3>
-          <p className="text-gray-400 mb-4">Return to the main page</p>
-          <Link href="/" className="cyber-button w-full block text-center">
-            Go Home
           </Link>
         </motion.div>
       </div>
