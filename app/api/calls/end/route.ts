@@ -29,14 +29,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, message: 'Call already completed' })
     }
 
-    // Update call with end time and client duration
+    // Calculate cost based on billing rules: first 3 minutes free, then $1 per minute
+    const durationMinutes = Math.ceil(clientDuration / 60)
+    let cost = 0
+    
+    if (durationMinutes > 3) {
+      // First 3 minutes free, charge for additional minutes
+      const chargeableMinutes = durationMinutes - 3
+      cost = chargeableMinutes * 1 // $1 per minute
+    }
+
+    console.log('💰 [Call End] Billing calculation:', { 
+      durationMinutes, 
+      cost, 
+      freeMinutes: 3, 
+      chargeableMinutes: Math.max(0, durationMinutes - 3) 
+    })
+
+    // Update call with end time and calculated cost
     const { error: updateError } = await supabase
       .from('calls')
       .update({
         status: 'completed',
         ended_at: new Date().toISOString(),
         duration: clientDuration || 0,
-        cost: Math.ceil((clientDuration || 0) / 60), // 1 credit per minute
+        cost: cost,
         client_duration: clientDuration || 0,
         tracking_method: trackingMethod || 'manual',
         final_duration_source: 'client_side'
@@ -55,7 +72,13 @@ export async function POST(request: NextRequest) {
       callId,
       status: 'completed',
       duration: clientDuration,
-      cost: Math.ceil((clientDuration || 0) / 60)
+      cost: cost,
+      billingInfo: {
+        totalMinutes: durationMinutes,
+        freeMinutes: 3,
+        chargeableMinutes: Math.max(0, durationMinutes - 3),
+        ratePerMinute: 1
+      }
     })
 
   } catch (error) {

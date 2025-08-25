@@ -239,6 +239,24 @@ export default function UsagePage() {
         </div>
       </motion.div>
 
+      {/* Enhanced Usage Notice */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="glass-card p-4 mb-8 text-center"
+      >
+        <div className="text-neon-blue text-lg mb-2">
+          💰 Simple Billing Rules
+        </div>
+        <div className="text-gray-400 text-sm space-y-1">
+          <p>✅ First 3 minutes of each call are FREE</p>
+          <p>💳 Additional minutes cost $1 each</p>
+          <p>📊 All usage tracked accurately</p>
+          <p>🎯 Simple click-to-start, click-to-stop system</p>
+        </div>
+      </motion.div>
+
       {/* Stats Grid */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

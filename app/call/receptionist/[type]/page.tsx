@@ -22,22 +22,19 @@ interface CallSession {
   startTime: number | null
   endTime: number | null
   duration: number
-  status: 'idle' | 'starting' | 'active' | 'ended' | 'webhook_pending'
-  trackingMethod: 'manual' | 'auto' | 'webhook'
+  status: 'idle' | 'starting' | 'active' | 'ended'
 }
 
-export default function EnhancedCallPage() {
+export default function SimpleCallPage() {
   const [user, setUser] = useState<any>(null)
   const [callSession, setCallSession] = useState<CallSession>({
     callId: null,
     startTime: null,
     endTime: null,
     duration: 0,
-    status: 'idle',
-    trackingMethod: 'auto'
+    status: 'idle'
   })
   const [loading, setLoading] = useState(true)
-  const heartbeatIntervalRef = useRef<NodeJS.Timeout>()
   const durationIntervalRef = useRef<NodeJS.Timeout>()
   const router = useRouter()
   const params = useParams()
@@ -74,78 +71,6 @@ export default function EnhancedCallPage() {
     checkUser()
   }, [type, config])
 
-  useEffect(() => {
-    if (!user) return
-
-    // Listen for ElevenLabs widget events
-    const handleConversationStart = (event: any) => {
-      console.log('🎙️ ElevenLabs conversation started:', event)
-      if (callSession.status === 'idle') {
-        startCallSession('auto')
-      }
-    }
-
-    const handleConversationEnd = (event: any) => {
-      console.log('🔚 ElevenLabs conversation ended:', event)
-      if (callSession.status === 'active') {
-        endCallSession('auto')
-      }
-    }
-
-    // Try multiple potential event names (check ElevenLabs docs for exact names)
-    const possibleStartEvents = [
-      'elevenlabs-conversation-start',
-      'elevenlabs-convai-start', 
-      'convai-start',
-      'conversation-started'
-    ]
-    
-    const possibleEndEvents = [
-      'elevenlabs-conversation-end',
-      'elevenlabs-convai-end',
-      'convai-end', 
-      'conversation-ended'
-    ]
-
-    // Add event listeners for all possible event names
-    possibleStartEvents.forEach(eventName => {
-      document.addEventListener(eventName, handleConversationStart)
-    })
-
-    possibleEndEvents.forEach(eventName => {
-      document.addEventListener(eventName, handleConversationEnd)
-    })
-
-    // Also listen for postMessage events from iframe
-    const handleMessage = (event: MessageEvent) => {
-      const data = event.data
-      if (data && typeof data === 'object') {
-        if (data.type === 'conversation-start' || data.event === 'start') {
-          handleConversationStart(data)
-        } else if (data.type === 'conversation-end' || data.event === 'end') {
-          handleConversationEnd(data)
-        }
-      }
-    }
-
-    window.addEventListener('message', handleMessage)
-
-    return () => {
-      // Cleanup listeners
-      possibleStartEvents.forEach(eventName => {
-        document.removeEventListener(eventName, handleConversationStart)
-      })
-      possibleEndEvents.forEach(eventName => {
-        document.removeEventListener(eventName, handleConversationEnd)
-      })
-      window.removeEventListener('message', handleMessage)
-
-      // Cleanup intervals
-      if (durationIntervalRef.current) clearInterval(durationIntervalRef.current)
-      if (heartbeatIntervalRef.current) clearInterval(heartbeatIntervalRef.current)
-    }
-  }, [user, callSession.status])
-
   const checkUser = async () => {
     try {
       const { data: { user: authUser }, error } = await supabase.auth.getUser()
@@ -163,15 +88,14 @@ export default function EnhancedCallPage() {
     }
   }
 
-  const startCallSession = async (method: 'manual' | 'auto' = 'manual') => {
-    if (!user || (callSession.status !== 'idle' && method === 'auto')) return
+  const startCallSession = async () => {
+    if (!user || callSession.status !== 'idle') return
 
-    console.log('🎬 [Call Page] Starting call session:', { method, userId: user.id, agentId: config.agentId })
+    console.log('🎬 [Call Page] Starting call session:', { userId: user.id, agentId: config.agentId })
 
     setCallSession(prev => ({ 
       ...prev, 
-      status: 'starting',
-      trackingMethod: method
+      status: 'starting'
     }))
 
     try {
@@ -206,10 +130,7 @@ export default function EnhancedCallPage() {
           }))
         }, 1000)
 
-        // Start heartbeat
-        startHeartbeat(data.callId)
-
-        console.log(`✅ Call started via ${method} method:`, data.callId)
+        console.log(`✅ Call started:`, data.callId)
       } else {
         console.error('Failed to start call:', data.error)
         setCallSession(prev => ({ ...prev, status: 'idle' }))
@@ -220,10 +141,10 @@ export default function EnhancedCallPage() {
     }
   }
 
-  const endCallSession = async (method: 'manual' | 'auto' = 'manual') => {
+  const endCallSession = async () => {
     if (!callSession.callId || callSession.status !== 'active') return
 
-    console.log('🛑 [Call Page] Ending call session:', { method, callId: callSession.callId, duration: callSession.duration })
+    console.log('🛑 [Call Page] Ending call session:', { callId: callSession.callId, duration: callSession.duration })
 
     const endTime = Date.now()
     const finalDuration = callSession.startTime ? endTime - callSession.startTime : 0
@@ -232,12 +153,11 @@ export default function EnhancedCallPage() {
       ...prev,
       endTime,
       duration: finalDuration,
-      status: method === 'auto' ? 'webhook_pending' : 'ended'
+      status: 'ended'
     }))
 
-    // Stop intervals
+    // Stop duration tracking
     if (durationIntervalRef.current) clearInterval(durationIntervalRef.current)
-    if (heartbeatIntervalRef.current) clearInterval(heartbeatIntervalRef.current)
 
     try {
       const response = await fetch('/api/calls/end', {
@@ -247,45 +167,15 @@ export default function EnhancedCallPage() {
           callId: callSession.callId,
           userId: user.id,
           clientDuration: Math.floor(finalDuration / 1000),
-          trackingMethod: method
+          trackingMethod: 'manual'
         })
       })
 
       const data = await response.json()
-      console.log(`✅ Call ended via ${method} method:`, data)
-
-      if (method === 'auto') {
-        // Wait for webhook to finalize the session
-        setTimeout(() => {
-          setCallSession(prev => ({ ...prev, status: 'ended' }))
-        }, 5000) // Give webhook 5 seconds to arrive
-      }
+      console.log(`✅ Call ended:`, data)
     } catch (error) {
       console.error('Error ending call:', error)
     }
-  }
-
-  const startHeartbeat = (callId: string) => {
-    heartbeatIntervalRef.current = setInterval(async () => {
-      if (!user) return
-
-      try {
-        const response = await fetch('/api/calls/heartbeat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ callId, userId: user.id })
-        })
-
-        const data = await response.json()
-        
-        if (!response.ok && data.callEnded) {
-          endCallSession('auto')
-          alert('Call ended: ' + data.error)
-        }
-      } catch (error) {
-        console.error('Heartbeat error:', error)
-      }
-    }, 30000)
   }
 
   const formatDuration = (ms: number) => {
@@ -299,7 +189,6 @@ export default function EnhancedCallPage() {
     switch (callSession.status) {
       case 'active': return 'text-neon-green'
       case 'starting': return 'text-neon-blue'
-      case 'webhook_pending': return 'text-neon-purple'
       case 'ended': return 'text-neon-pink'
       default: return 'text-gray-400'
     }
@@ -309,7 +198,6 @@ export default function EnhancedCallPage() {
     switch (callSession.status) {
       case 'active': return '🟢'
       case 'starting': return '🟡'
-      case 'webhook_pending': return '🟣'
       case 'ended': return '🔴'
       default: return '⚫'
     }
@@ -319,7 +207,6 @@ export default function EnhancedCallPage() {
     switch (callSession.status) {
       case 'active': return `Active - ${formatDuration(callSession.duration)}`
       case 'starting': return 'Starting...'
-      case 'webhook_pending': return 'Processing...'
       case 'ended': return `Ended - ${formatDuration(callSession.duration)}`
       default: return 'Ready'
     }
@@ -352,7 +239,7 @@ export default function EnhancedCallPage() {
 
   return (
     <div className="min-h-screen p-6">
-      {/* Header with Enhanced Call Status */}
+      {/* Header with Call Status */}
       <header className="flex justify-between items-center mb-8">
         <Link href="/reception" className="text-2xl font-cyber font-bold neon-text">
           {config.emoji} {config.name}
@@ -363,9 +250,6 @@ export default function EnhancedCallPage() {
             <div className={`font-bold ${getStatusColor()}`}>
               {getStatusIcon()} {getStatusText()}
             </div>
-            {callSession.trackingMethod === 'auto' && callSession.status === 'active' && (
-              <div className="text-xs text-neon-green">Auto-tracking enabled</div>
-            )}
             {callSession.status === 'active' && (
               <div className="text-xs text-neon-blue mt-1">
                 Session: {callSession.callId?.slice(-8)}
@@ -375,7 +259,7 @@ export default function EnhancedCallPage() {
         </div>
       </header>
 
-      {/* Enhanced Status Panel */}
+      {/* Simple Call Controls */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -383,25 +267,40 @@ export default function EnhancedCallPage() {
       >
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xl font-semibold text-white mb-2">Session Status</h3>
+            <h3 className="text-xl font-semibold text-white mb-2">Call Controls</h3>
             <div className="text-sm text-gray-400">
-              Tracking: <span className="text-neon-blue capitalize">{callSession.trackingMethod}</span>
               {callSession.callId && (
-                <span className="ml-4">
+                <span>
                   ID: <span className="font-mono text-xs">{callSession.callId.slice(-8)}</span>
                 </span>
               )}
             </div>
           </div>
           
-          {/* Status Indicator */}
-          <div className="text-right">
-            <div className={`text-lg font-semibold ${getStatusColor()}`}>
-              {getStatusIcon()} {callSession.status === 'idle' ? 'Ready' : callSession.status}
-            </div>
-            {callSession.trackingMethod === 'auto' && callSession.status === 'active' && (
-              <div className="text-xs text-neon-green">Auto-tracking enabled</div>
-            )}
+          {/* Start/Stop Buttons */}
+          <div className="flex gap-4">
+            <button
+              onClick={startCallSession}
+              disabled={callSession.status !== 'idle'}
+              className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
+                callSession.status !== 'idle' 
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-neon-green/20 text-neon-green hover:bg-neon-green/30 border border-neon-green/50'
+              }`}
+            >
+              🎙️ Start Call
+            </button>
+            <button
+              onClick={endCallSession}
+              disabled={callSession.status !== 'active'}
+              className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
+                callSession.status !== 'active'
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/50'
+              }`}
+            >
+              🛑 End Call
+            </button>
           </div>
         </div>
       </motion.div>
@@ -424,7 +323,7 @@ export default function EnhancedCallPage() {
         </div>
       </motion.div>
 
-      {/* Enhanced Usage Notice */}
+      {/* Simple Usage Notice */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -432,13 +331,13 @@ export default function EnhancedCallPage() {
         className="glass-card p-4 mb-8 text-center"
       >
         <div className="text-neon-blue text-lg mb-2">
-          🎙️ Fully Automatic Tracking
+          🎙️ Simple Call Tracking
         </div>
         <div className="text-gray-400 text-sm space-y-1">
-          <p>✅ Conversation automatically starts/stops tracking</p>
-          <p>🔄 Real-time sync with ElevenLabs</p>
-          <p>💰 Accurate billing based on actual usage</p>
-          <p>🎯 Just talk naturally - everything else is automatic</p>
+          <p>✅ Click "Start Call" when you begin talking</p>
+          <p>🛑 Click "End Call" when you finish</p>
+          <p>💰 First 3 minutes free, then $1 per minute</p>
+          <p>📊 All usage tracked accurately in your dashboard</p>
         </div>
       </motion.div>
 
