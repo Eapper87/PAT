@@ -312,7 +312,7 @@ export default function EnhancedCallPage() {
 
   const getStatusText = () => {
     switch (callSession.status) {
-      case 'active': return `Active (${callSession.trackingMethod}) - ${formatDuration(callSession.duration)}`
+      case 'active': return `Active - ${formatDuration(callSession.duration)}`
       case 'starting': return 'Starting...'
       case 'webhook_pending': return 'Processing...'
       case 'ended': return `Ended - ${formatDuration(callSession.duration)}`
@@ -389,30 +389,14 @@ export default function EnhancedCallPage() {
             </div>
           </div>
           
-          {/* Manual Override Controls */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => startCallSession('manual')}
-              disabled={callSession.status !== 'idle'}
-              className={`px-4 py-2 text-sm rounded-lg transition-colors ${
-                callSession.status !== 'idle' 
-                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-neon-green/20 text-neon-green hover:bg-neon-green/30'
-              }`}
-            >
-              Manual Start
-            </button>
-            <button
-              onClick={() => endCallSession('manual')}
-              disabled={callSession.status !== 'active'}
-              className={`px-4 py-2 text-sm rounded-lg transition-colors ${
-                callSession.status !== 'active'
-                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
-              }`}
-            >
-              Manual End
-            </button>
+          {/* Status Indicator */}
+          <div className="text-right">
+            <div className={`text-lg font-semibold ${getStatusColor()}`}>
+              {getStatusIcon()} {callSession.status === 'idle' ? 'Ready' : callSession.status}
+            </div>
+            {callSession.trackingMethod === 'auto' && callSession.status === 'active' && (
+              <div className="text-xs text-neon-green">Auto-tracking enabled</div>
+            )}
           </div>
         </div>
       </motion.div>
@@ -443,13 +427,13 @@ export default function EnhancedCallPage() {
         className="glass-card p-4 mb-8 text-center"
       >
         <div className="text-neon-blue text-lg mb-2">
-          🎙️ Auto-Tracking Enabled
+          🎙️ Fully Automatic Tracking
         </div>
         <div className="text-gray-400 text-sm space-y-1">
           <p>✅ Conversation automatically starts/stops tracking</p>
           <p>🔄 Real-time sync with ElevenLabs</p>
           <p>💰 Accurate billing based on actual usage</p>
-          <p>🛡️ Manual controls available as backup</p>
+          <p>🎯 Just talk naturally - everything else is automatic</p>
         </div>
       </motion.div>
 
