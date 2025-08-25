@@ -35,6 +35,7 @@ export default function SimpleCallPage() {
     status: 'idle'
   })
   const [loading, setLoading] = useState(true)
+  const [showTimeWarning, setShowTimeWarning] = useState(false)
   const durationIntervalRef = useRef<NodeJS.Timeout>()
   const router = useRouter()
   const params = useParams()
@@ -124,10 +125,22 @@ export default function SimpleCallPage() {
 
         // Start duration tracking
         durationIntervalRef.current = setInterval(() => {
-          setCallSession(prev => ({
-            ...prev,
-            duration: prev.startTime ? Date.now() - prev.startTime : 0
-          }))
+          setCallSession(prev => {
+            const newDuration = prev.startTime ? Date.now() - prev.startTime : 0
+            
+            // Show warning at 2:30 (150 seconds) and auto-end at 3:00 (180 seconds)
+            if (newDuration >= 180000) { // 3 minutes
+              // Auto-end the call
+              setTimeout(() => endCallSession(), 100)
+            } else if (newDuration >= 150000 && !showTimeWarning) { // 2:30
+              setShowTimeWarning(true)
+            }
+            
+            return {
+              ...prev,
+              duration: newDuration
+            }
+          })
         }, 1000)
 
         console.log(`✅ Call started:`, data.callId)
@@ -303,6 +316,19 @@ export default function SimpleCallPage() {
             </button>
           </div>
         </div>
+        
+        {/* Time Warning */}
+        {showTimeWarning && callSession.status === 'active' && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-4 p-3 bg-yellow-500/20 border border-yellow-500/50 rounded-lg"
+          >
+            <div className="text-yellow-400 text-center">
+              ⚠️ <strong>Time Warning:</strong> Your call will automatically end in 30 seconds (Free tier limit: 3 minutes)
+            </div>
+          </motion.div>
+        )}
       </motion.div>
 
       {/* ElevenLabs Widget */}
@@ -331,13 +357,13 @@ export default function SimpleCallPage() {
         className="glass-card p-4 mb-8 text-center"
       >
         <div className="text-neon-blue text-lg mb-2">
-          🎙️ Simple Call Tracking
+          🎙️ Free Tier Call System
         </div>
         <div className="text-gray-400 text-sm space-y-1">
           <p>✅ Click "Start Call" when you begin talking</p>
           <p>🛑 Click "End Call" when you finish</p>
-          <p>💰 First 3 minutes free, then $1 per minute</p>
-          <p>📊 All usage tracked accurately in your dashboard</p>
+          <p>⏰ Free tier: 3 minutes maximum per call</p>
+          <p>💳 Premium plans coming soon: $29 and $99 tiers</p>
         </div>
       </motion.div>
 

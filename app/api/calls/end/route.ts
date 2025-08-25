@@ -29,34 +29,46 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, message: 'Call already completed' })
     }
 
-    // Calculate cost based on billing rules: first 3 minutes free, then $1 per minute
+    // Free tier: 3 minutes max per call, no overtime billing
     const durationMinutes = Math.ceil(clientDuration / 60)
     let cost = 0
+    let status = 'completed'
+    let billingNote = ''
     
     if (durationMinutes > 3) {
-      // First 3 minutes free, charge for additional minutes
-      const chargeableMinutes = durationMinutes - 3
-      cost = chargeableMinutes * 1 // $1 per minute
+      // Free tier exceeded - call is limited to 3 minutes
+      const actualDuration = 3 * 60 // 3 minutes in seconds
+      cost = 0 // No charge for free tier
+      status = 'limited' // Mark as limited instead of completed
+      billingNote = 'Free tier limit reached (3 minutes)'
+      
+      console.log('⚠️ [Call End] Free tier limit reached:', { 
+        requestedMinutes: durationMinutes, 
+        allowedMinutes: 3,
+        actualDurationSeconds: actualDuration,
+        cost: 0
+      })
+    } else {
+      // Within free tier limits
+      billingNote = 'Free tier call'
+      console.log('✅ [Call End] Free tier call completed:', { 
+        durationMinutes, 
+        cost: 0 
+      })
     }
 
-    console.log('💰 [Call End] Billing calculation:', { 
-      durationMinutes, 
-      cost, 
-      freeMinutes: 3, 
-      chargeableMinutes: Math.max(0, durationMinutes - 3) 
-    })
-
-    // Update call with end time and calculated cost
+    // Update call with end time and billing info
     const { error: updateError } = await supabase
       .from('calls')
       .update({
-        status: 'completed',
+        status: status,
         ended_at: new Date().toISOString(),
-        duration: clientDuration || 0,
+        duration: status === 'limited' ? 3 * 60 : clientDuration, // Use actual duration
         cost: cost,
         client_duration: clientDuration || 0,
         tracking_method: trackingMethod || 'manual',
-        final_duration_source: 'client_side'
+        final_duration_source: 'client_side',
+        billing_note: billingNote
       })
       .eq('id', callId)
 
@@ -70,14 +82,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       callId,
-      status: 'completed',
-      duration: clientDuration,
+      status: status,
+      duration: status === 'limited' ? 3 * 60 : clientDuration,
       cost: cost,
       billingInfo: {
-        totalMinutes: durationMinutes,
-        freeMinutes: 3,
-        chargeableMinutes: Math.max(0, durationMinutes - 3),
-        ratePerMinute: 1
+        tier: 'free',
+        maxMinutes: 3,
+        actualMinutes: status === 'limited' ? 3 : durationMinutes,
+        requestedMinutes: durationMinutes,
+        cost: 0,
+        note: billingNote
       }
     })
 

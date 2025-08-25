@@ -247,13 +247,13 @@ export default function UsagePage() {
         className="glass-card p-4 mb-8 text-center"
       >
         <div className="text-neon-blue text-lg mb-2">
-          💰 Simple Billing Rules
+          💰 Free Tier System
         </div>
         <div className="text-gray-400 text-sm space-y-1">
-          <p>✅ First 3 minutes of each call are FREE</p>
-          <p>💳 Additional minutes cost $1 each</p>
+          <p>✅ Free tier: 3 minutes maximum per call</p>
+          <p>⏰ Calls automatically end at 3 minutes</p>
+          <p>💳 Premium plans coming soon</p>
           <p>📊 All usage tracked accurately</p>
-          <p>🎯 Simple click-to-start, click-to-stop system</p>
         </div>
       </motion.div>
 
