@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { CallSessionManager, CallSession } from '@/lib/callSessionManager'
 import Link from 'next/link'
 
 // TypeScript declaration for ElevenLabs custom element
@@ -56,9 +57,13 @@ const receptionistConfigs: Record<string, ReceptionistConfig> = {
 export default function ReceptionistCallPage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [callSession, setCallSession] = useState<CallSession | null>(null)
+  const [creditsRemaining, setCreditsRemaining] = useState<number>(0)
+  const [isCallActive, setIsCallActive] = useState(false)
   const router = useRouter()
   const params = useParams()
   const type = params.type as string
+  const sessionManagerRef = useRef<CallSessionManager | null>(null)
 
   const config = receptionistConfigs[type]
 
@@ -69,6 +74,47 @@ export default function ReceptionistCallPage() {
     }
     checkUser()
   }, [type, config])
+
+  useEffect(() => {
+    if (user && !sessionManagerRef.current) {
+      sessionManagerRef.current = new CallSessionManager(
+        user.id,
+        handleStatusUpdate,
+        handleCallEnded,
+        handleError
+      )
+    }
+
+    return () => {
+      if (sessionManagerRef.current) {
+        sessionManagerRef.current.destroy()
+      }
+    }
+  }, [user])
+
+  // Handle ElevenLabs Convai events
+  useEffect(() => {
+    const handleConvaiStart = () => {
+      if (sessionManagerRef.current && user) {
+        startCallSession()
+      }
+    }
+
+    const handleConvaiEnd = () => {
+      if (sessionManagerRef.current) {
+        endCallSession()
+      }
+    }
+
+    // Listen for ElevenLabs Convai events
+    window.addEventListener('convai-start', handleConvaiStart)
+    window.addEventListener('convai-end', handleConvaiEnd)
+
+    return () => {
+      window.removeEventListener('convai-start', handleConvaiStart)
+      window.removeEventListener('convai-end', handleConvaiEnd)
+    }
+  }, [user])
 
   const checkUser = async () => {
     try {
@@ -86,6 +132,48 @@ export default function ReceptionistCallPage() {
       console.error('Error checking user:', error)
       router.push('/login')
     }
+  }
+
+  const startCallSession = async () => {
+    try {
+      if (!sessionManagerRef.current) return
+
+      // Start call session with receptionist agent ID
+      const session = await sessionManagerRef.current.startCall('receptionist-agent-id')
+      setCallSession(session)
+      setCreditsRemaining(session.creditsRemaining)
+      setIsCallActive(true)
+    } catch (error: any) {
+      console.error('Error starting call session:', error)
+      if (error.message.includes('Insufficient credits')) {
+        router.push('/pricing?error=insufficient_credits')
+      }
+    }
+  }
+
+  const endCallSession = async () => {
+    try {
+      if (sessionManagerRef.current) {
+        await sessionManagerRef.current.endCall()
+        setIsCallActive(false)
+      }
+    } catch (error) {
+      console.error('Error ending call session:', error)
+    }
+  }
+
+  const handleStatusUpdate = (session: CallSession) => {
+    setCallSession(session)
+    setCreditsRemaining(session.creditsRemaining)
+  }
+
+  const handleCallEnded = (session: CallSession) => {
+    setCallSession(session)
+    setIsCallActive(false)
+  }
+
+  const handleError = (error: string) => {
+    console.error('Call session error:', error)
   }
 
   if (!config) {
@@ -120,13 +208,33 @@ export default function ReceptionistCallPage() {
         <Link href="/reception" className="text-2xl font-cyber font-bold neon-text">
           {config.emoji} {config.name}
         </Link>
-        <div className="text-white">
-          <span className="text-gray-400">Status: </span>
-          <span className={`${
-            loading ? 'text-yellow-400' : 'text-neon-green'
-          }`}>
-            {loading ? 'Connecting...' : 'Active'}
-          </span>
+        <div className="flex items-center space-x-4">
+          {/* Credit Display */}
+          {isCallActive && callSession && (
+            <div className="text-right">
+              <div className="text-sm text-gray-400">Credits Remaining</div>
+              <div className="text-xl font-mono text-neon-pink">{creditsRemaining}</div>
+            </div>
+          )}
+          {/* Call Duration */}
+          {isCallActive && callSession && (
+            <div className="text-right">
+              <div className="text-sm text-gray-400">Call Duration</div>
+              <div className="text-xl font-mono text-neon-blue">
+                {Math.floor(callSession.serverDuration / 60)}:{(callSession.serverDuration % 60).toString().padStart(2, '0')}
+              </div>
+            </div>
+          )}
+          <div className="text-white">
+            <span className="text-gray-400">Status: </span>
+            <span className={`${
+              loading ? 'text-yellow-400' : 
+              isCallActive ? 'text-neon-green' : 'text-gray-400'
+            }`}>
+              {loading ? 'Connecting...' : 
+               isCallActive ? 'Active Call' : 'Ready'}
+            </span>
+          </div>
         </div>
       </header>
 
@@ -157,6 +265,22 @@ export default function ReceptionistCallPage() {
               </span>
             ))}
           </div>
+          
+          {/* Credit Usage Progress */}
+          {isCallActive && callSession && (
+            <div className="mt-6">
+              <div className="flex justify-between text-sm text-gray-400 mb-2">
+                <span>Credits Used: {callSession.creditsUsed}</span>
+                <span>Total Cost: {callSession.cost}</span>
+              </div>
+              <div className="w-full bg-dark-700 rounded-full h-2">
+                <div 
+                  className="bg-neon-pink h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.min(100, (callSession.creditsUsed / Math.max(1, callSession.cost)) * 100)}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* ElevenLabs Convai Widget for Raven */}
@@ -224,6 +348,12 @@ export default function ReceptionistCallPage() {
           <p className="text-gray-400 text-sm">
             Use the voice chat interface above to talk directly with {config.name}. No text input needed - just speak naturally and experience {config.name.toLowerCase()}'s unique personality!
           </p>
+          {isCallActive && (
+            <div className="mt-4 p-3 bg-neon-pink/20 border border-neon-pink/40 rounded-lg">
+              <div className="text-neon-pink font-semibold">Active Call</div>
+              <div className="text-sm text-gray-300">Credits are being consumed as you talk</div>
+            </div>
+          )}
         </motion.div>
 
         {/* Back to Reception */}

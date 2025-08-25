@@ -35,6 +35,14 @@ export interface Call {
   status: 'initiated' | 'active' | 'completed' | 'failed'
   created_at: string
   ended_at?: string
+  // New fields for server-side session management
+  session_started_at?: string
+  last_heartbeat?: string
+  server_duration?: number
+  processing_status?: 'pending' | 'processing' | 'completed' | 'failed'
+  webhook_received?: boolean
+  elevenlabs_processing_time?: number
+  credits_reserved?: number
 }
 
 export interface Transaction {

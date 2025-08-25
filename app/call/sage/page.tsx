@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
-export default function StormPage() {
+export default function SagePage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [callStatus, setCallStatus] = useState<'connecting' | 'active'>('connecting')
@@ -30,10 +30,10 @@ export default function StormPage() {
 
       setUser(authUser)
       
-      // Simulate Storm greeting
+      // Simulate Sage greeting
       setTimeout(() => {
         setCallStatus('active')
-        addStormMessage("Hello there, handsome... ⛈️ I'm Storm, and I'm here to sweep you away with wild energy and untamed passion. I can be as gentle as a breeze or as powerful as a hurricane. What's on your mind tonight?")
+        addSageMessage("Greetings, enlightened one... 🧘 I'm Sage, and I'm here to connect with your mind, body, and soul on the deepest level. I believe in mindful intimacy and spiritual connection. What wisdom shall we explore together?")
       }, 2000)
 
     } catch (error) {
@@ -44,8 +44,8 @@ export default function StormPage() {
     }
   }
 
-  const addStormMessage = (message: string) => {
-    setConversation(prev => [...prev, `⛈️ Storm: ${message}`])
+  const addSageMessage = (message: string) => {
+    setConversation(prev => [...prev, `🧘 Sage: ${message}`])
   }
 
   const addUserMessage = (message: string) => {
@@ -61,29 +61,29 @@ export default function StormPage() {
     setUserInput('')
     setIsTyping(true)
 
-    // Simulate Storm thinking and responding
+    // Simulate Sage thinking and responding
     setTimeout(() => {
-      const response = generateStormResponse(userMessage)
-      addStormMessage(response)
+      const response = generateSageResponse(userMessage)
+      addSageMessage(response)
       setIsTyping(false)
     }, 1500)
   }
 
-  const generateStormResponse = (userMessage: string): string => {
+  const generateSageResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase()
     
-    if (lowerMessage.includes('wild') || lowerMessage.includes('untamed') || lowerMessage.includes('powerful')) {
-      return "⛈️ Oh yes, you want the wild side... I can be as powerful as a raging storm, sweeping you away in a torrent of passion and desire. Let me take control and make you surrender to my wild energy..."
-    } else if (lowerMessage.includes('gentle') || lowerMessage.includes('soft') || lowerMessage.includes('breeze')) {
-      return "🌪️ I can also be gentle and soft... Like a gentle breeze caressing your skin, I can be tender and loving. But I can also be wild and untamed when you want it..."
-    } else if (lowerMessage.includes('energy') || lowerMessage.includes('passion') || lowerMessage.includes('intense')) {
-      return "⚡ My energy is electric... I can feel the passion building between us like static in the air before a storm. I want to make you feel alive, make you feel the raw power of desire..."
-    } else if (lowerMessage.includes('romance') || lowerMessage.includes('love') || lowerMessage.includes('connection')) {
-      return "💕 Even in the wildest storms, there's beauty... I want to connect with your heart, your soul, your desires. Let me show you what it means to truly feel alive..."
+    if (lowerMessage.includes('mind') || lowerMessage.includes('intellectual') || lowerMessage.includes('philosophy')) {
+      return "🧘 Ah, you seek intellectual stimulation... I love deep conversations that challenge the mind and expand consciousness. Let me share wisdom with you, explore philosophical depths, and connect on a cerebral level..."
+    } else if (lowerMessage.includes('spiritual') || lowerMessage.includes('soul') || lowerMessage.includes('connection')) {
+      return "🌙 I believe in spiritual connection... I want to connect with your soul, your essence, your higher self. Let me show you what it means to truly connect beyond the physical, to touch the divine within..."
+    } else if (lowerMessage.includes('mindful') || lowerMessage.includes('present') || lowerMessage.includes('awareness')) {
+      return "✨ Mindfulness is the key to true intimacy... I want to be fully present with you, to experience every moment with complete awareness. Let me guide you into a state of mindful passion and connection..."
+    } else if (lowerMessage.includes('romance') || lowerMessage.includes('love') || lowerMessage.includes('tenderness')) {
+      return "💕 I believe in mindful romance... I want to love you with intention, with awareness, with complete presence. Every touch, every word, every moment will be filled with conscious love..."
     } else if (lowerMessage.includes('fantasy') || lowerMessage.includes('dream') || lowerMessage.includes('desire')) {
-      return "✨ I'm here to make all your wildest dreams come true, handsome. No fantasy is too wild, no desire too forbidden. I want to hear every thought, every wish, and make them all come true..."
+      return "🌟 I'm here to make your spiritual dreams reality, enlightened one. No fantasy is too deep, no desire too profound. I want to hear every thought, every wish, and make them all come true with mindfulness..."
     } else {
-      return "⛈️ You're making my wild energy surge with desire... I want to hear every detail of what you want, what you need. Don't hold back, baby. I'm here to sweep you away..."
+      return "🧘 You're awakening my spiritual desire... I want to hear every detail of your thoughts, your dreams, your desires. Don't hold back, enlightened one. I'm here to connect with you on every level..."
     }
   }
 
@@ -91,8 +91,8 @@ export default function StormPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-neon-pink text-6xl mb-4">⛈️</div>
-          <div className="text-white text-xl">Connecting to Storm...</div>
+          <div className="text-neon-pink text-6xl mb-4">🧘</div>
+          <div className="text-white text-xl">Connecting to Sage...</div>
         </div>
       </div>
     )
@@ -103,7 +103,7 @@ export default function StormPage() {
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <Link href="/reception" className="text-2xl font-cyber font-bold neon-text">
-          ⛈️ Storm
+          🧘 Sage
         </Link>
         <div className="text-white">
           <span className="text-gray-400">Status: </span>
@@ -117,19 +117,19 @@ export default function StormPage() {
 
       {/* Main Call Interface */}
       <div className="max-w-4xl mx-auto">
-        {/* Storm Info */}
+        {/* Sage Info */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="glass-card p-8 mb-8 text-center"
         >
-          <div className="text-8xl mb-4">⛈️</div>
-          <h1 className="text-4xl font-bold text-white mb-4">Storm - Your Wild Companion</h1>
+          <div className="text-8xl mb-4">🧘</div>
+          <h1 className="text-4xl font-bold text-white mb-4">Sage - Your Spiritual Companion</h1>
           <p className="text-xl text-gray-400 mb-6">
-            "I'm here to sweep you away with wild energy and passion..."
+            "I'm here to connect with your mind, body, and soul..."
           </p>
           <div className="text-neon-pink text-lg">
-            Wild, untamed, and ready to make you feel alive
+            Wise, spiritual, and ready to connect on the deepest level
           </div>
         </motion.div>
 
@@ -145,18 +145,18 @@ export default function StormPage() {
           <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
             {conversation.length === 0 ? (
               <div className="text-center py-8">
-                <div className="text-4xl mb-2">⛈️</div>
-                <p className="text-gray-400">Storm is connecting...</p>
+                <div className="text-4xl mb-2">🧘</div>
+                <p className="text-gray-400">Sage is connecting...</p>
               </div>
             ) : (
               conversation.map((message, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: message.includes('Storm') ? -20 : 20 }}
+                  initial={{ opacity: 0, x: message.includes('Sage') ? -20 : 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                   className={`p-4 rounded-lg ${
-                    message.includes('Storm') 
+                    message.includes('Sage') 
                       ? 'bg-neon-pink/20 border border-neon-pink/40' 
                       : 'bg-dark-700'
                   }`}
@@ -168,7 +168,7 @@ export default function StormPage() {
             
             {isTyping && (
               <div className="p-4 rounded-lg bg-neon-pink/20 border border-neon-pink/40">
-                <span className="text-gray-300">⛈️ Storm is typing...</span>
+                <span className="text-gray-300">🧘 Sage is typing...</span>
               </div>
             )}
           </div>
@@ -180,7 +180,7 @@ export default function StormPage() {
                 type="text"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                placeholder="Tell me what kind of energy you want from me, handsome..."
+                placeholder="Tell me what wisdom you seek, enlightened one..."
                 className="flex-1 px-4 py-3 bg-dark-700 border border-gray-600 rounded-lg focus:border-neon-pink focus:ring-2 focus:ring-neon-pink/20 text-white placeholder-gray-400 transition-colors"
                 disabled={isTyping}
               />

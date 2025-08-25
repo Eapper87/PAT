@@ -140,7 +140,7 @@ export default function AtlasPage() {
           transition={{ delay: 0.2 }}
           className="glass-card p-6 mb-8"
         >
-          <h2 className="text-2xl font-semibold text-white mb-6">Your Protective Conversation</h2>
+          <h2 className="text-2xl font-semibold text-white mb-6">Your Intimate Conversation</h2>
           
           <div className="space-y-4 max-h-96 overflow-y-auto mb-6">
             {conversation.length === 0 ? (

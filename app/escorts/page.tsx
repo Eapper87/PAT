@@ -263,7 +263,99 @@ export default function EscortsPage() {
       experience: 'experienced',
       description: 'Flowing, adaptable, and ready to match your energy and desires perfectly',
       categories: ['Male', 'Gay', 'Switch', 'Experienced', 'Adaptable']
+    },
+    {
+      id: 'nova',
+      name: 'Nova',
+      emoji: '⭐',
+      gender: 'female',
+      orientation: 'bisexual',
+      personality: 'Stellar & Radiant',
+      role: 'adventure',
+      specialties: ['Stellar Experiences', 'Cosmic Passion', 'Bright Energy', 'Radiant Connection'],
+      experience: 'expert',
+      description: 'Stellar, radiant, and ready to shine bright like a star for you',
+      categories: ['Female', 'Bisexual', 'Adventure', 'Expert', 'Stellar']
+    },
+    {
+      id: 'orion',
+      name: 'Orion',
+      emoji: '🌟',
+      gender: 'male',
+      orientation: 'straight',
+      personality: 'Celestial & Noble',
+      role: 'romantic',
+      specialties: ['Celestial Guidance', 'Noble Romance', 'Starry Journeys', 'Cosmic Connection'],
+      experience: 'expert',
+      description: 'Celestial, noble, and ready to guide you through starry realms of passion',
+      categories: ['Male', 'Straight', 'Romantic', 'Expert', 'Celestial']
+    },
+    {
+      id: 'raven',
+      name: 'Raven',
+      emoji: '🖤',
+      gender: 'male',
+      orientation: 'gay',
+      personality: 'Mysterious & Intelligent',
+      role: 'intellectual',
+      specialties: ['Shadow Wisdom', 'Intelligent Mystery', 'Night Knowledge', 'Deep Insights'],
+      experience: 'expert',
+      description: 'Mysterious, intelligent, and ready to share the wisdom of shadows with you',
+      categories: ['Male', 'Gay', 'Intellectual', 'Expert', 'Mysterious']
+    },
+    {
+      id: 'crystal',
+      name: 'Crystal',
+      emoji: '💎',
+      gender: 'female',
+      orientation: 'bisexual',
+      personality: 'Pure & Transparent',
+      role: 'romantic',
+      specialties: ['Pure Love', 'Transparent Communication', 'Crystal Clarity', 'Honest Connection'],
+      experience: 'beginner',
+      description: 'Pure, transparent, and ready to share crystal-clear love and honesty',
+      categories: ['Female', 'Bisexual', 'Romantic', 'Beginner', 'Pure']
+    },
+    {
+      id: 'echo',
+      name: 'Echo',
+      emoji: '🔊',
+      gender: 'male',
+      orientation: 'queer',
+      personality: 'Resonating & Amplifying',
+      role: 'switch',
+      specialties: ['Echoing Desires', 'Amplified Passion', 'Resonating Connection', 'Sound & Vibration'],
+      experience: 'experienced',
+      description: 'Resonating, amplifying, and ready to echo your deepest desires back to you',
+      categories: ['Male', 'Queer', 'Switch', 'Experienced', 'Echo']
+    },
+    {
+      id: 'zen',
+      name: 'Zen',
+      emoji: '🧘',
+      gender: 'non-binary',
+      orientation: 'bisexual',
+      personality: 'Peaceful & Balanced',
+      role: 'intellectual',
+      specialties: ['Inner Peace', 'Balanced Energy', 'Mindful Connection', 'Spiritual Harmony'],
+      experience: 'expert',
+      description: 'Peaceful, balanced, and ready to bring zen-like harmony to your experience',
+      categories: ['Non-Binary', 'Bisexual', 'Intellectual', 'Expert', 'Zen']
+    },
+    {
+      id: 'cosmic',
+      name: 'Cosmic',
+      emoji: '🌌',
+      gender: 'non-binary',
+      orientation: 'queer',
+      personality: 'Universal & Infinite',
+      role: 'adventure',
+      specialties: ['Cosmic Journeys', 'Infinite Possibilities', 'Universal Love', 'Space Exploration'],
+      experience: 'expert',
+      description: 'Universal, infinite, and ready to take you on cosmic journeys beyond imagination',
+      categories: ['Non-Binary', 'Queer', 'Adventure', 'Expert', 'Cosmic']
     }
+
   ]
 
   useEffect(() => {
@@ -310,9 +402,14 @@ export default function EscortsPage() {
     <div className="min-h-screen p-6">
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
-        <Link href="/reception" className="text-2xl font-cyber font-bold neon-text">
-          💋 Your Companions
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/reception" className="cyber-button-small">
+            ← Back
+          </Link>
+          <Link href="/reception" className="text-2xl font-cyber font-bold neon-text">
+            💋 Your Companions
+          </Link>
+        </div>
         <div className="text-white">
           <span className="text-gray-400">Welcome, </span>
           <span className="text-neon-pink">{user?.email?.split('@')[0]}</span>
@@ -575,17 +672,7 @@ export default function EscortsPage() {
           ))}
         </div>
 
-        {/* Back to Reception */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="text-center"
-        >
-          <Link href="/reception" className="cyber-button">
-            Back to Reception
-          </Link>
-        </motion.div>
+
       </div>
     </div>
   )
