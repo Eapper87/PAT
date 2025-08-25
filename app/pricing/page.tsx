@@ -76,7 +76,7 @@ export default function Pricing() {
       return
     }
     
-    setLoading('subscription')
+    setLoading(priceId)
     try {
       const response = await fetch('/api/stripe/create-checkout', {
         method: 'POST',
@@ -95,9 +95,11 @@ export default function Pricing() {
         window.location.href = data.url
       } else {
         console.error('No checkout URL received:', data.error)
+        setLoading(null)
       }
     } catch (error) {
       console.error('Error creating checkout session:', error)
+      setLoading(null)
     } finally {
       setLoading(null)
     }
@@ -240,10 +242,10 @@ export default function Pricing() {
               ) : (
                 <button
                   onClick={() => handleSubscribe(plan.priceId!)}
-                  disabled={loading === 'subscription'}
+                  disabled={loading === plan.priceId}
                   className="cyber-button w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading === 'subscription' ? 'Processing...' : 'Subscribe Now'}
+                  {loading === plan.priceId ? 'Processing...' : 'Subscribe Now'}
                 </button>
               )}
             </motion.div>
