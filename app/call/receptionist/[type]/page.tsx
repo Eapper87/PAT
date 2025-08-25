@@ -100,43 +100,64 @@ export default function ReceptionistCallPage() {
     }
   }, [user])
 
-  // Handle ElevenLabs Convai events using proper event listeners
+  // Monitor ElevenLabs widget state for call detection
   useEffect(() => {
-    const handleConvaiStart = (event: any) => {
-      console.log('🎤 [ElevenLabs] Convai start event received:', event)
-      if (sessionManagerRef.current && user) {
-        console.log('✅ [ElevenLabs] Starting call session via event listener')
-        startCallSession()
-      } else {
-        console.warn('⚠️ [ElevenLabs] Cannot start call session:', {
-          hasSessionManager: !!sessionManagerRef.current,
-          hasUser: !!user
-        })
+    console.log('🎧 [ElevenLabs] Setting up widget state monitoring...')
+    
+    let checkInterval: NodeJS.Timeout
+    
+    const monitorWidgetState = () => {
+      const widget = document.querySelector('elevenlabs-convai')
+      if (widget) {
+        console.log('🎤 [ElevenLabs] Widget found, monitoring for call state changes...')
+        
+        // Check for active call indicators in the widget
+        const checkCallState = () => {
+          // Look for common call state indicators in the widget
+          const hasActiveCall = widget.querySelector('[data-call-active], .call-active, .recording, .speaking') !== null
+          const hasMicrophoneActive = widget.querySelector('.mic-active, .recording-indicator, [aria-label*="recording"]') !== null
+          const hasAudioPlaying = widget.querySelector('audio[src], .audio-playing, [data-audio-active]') !== null
+          const hasUserSpeaking = widget.querySelector('.user-speaking, .input-active, [data-user-input]') !== null
+          
+          // Check if any call activity is happening
+          const isCallInProgress = hasActiveCall || hasMicrophoneActive || hasAudioPlaying || hasUserSpeaking
+          
+          if (isCallInProgress) {
+            if (!isCallActive) {
+              console.log('🎬 [ElevenLabs] Call activity detected in widget:', {
+                hasActiveCall,
+                hasMicrophoneActive,
+                hasAudioPlaying,
+                hasUserSpeaking
+              })
+              startCallSession()
+            }
+          } else {
+            if (isCallActive) {
+              console.log('🛑 [ElevenLabs] Call activity ended in widget, ending session...')
+              endCallSession()
+            }
+          }
+        }
+        
+        // Check every 1 second for call state changes
+        checkInterval = setInterval(checkCallState, 1000)
+        console.log('✅ [ElevenLabs] Widget monitoring active')
       }
     }
-
-    const handleConvaiEnd = (event: any) => {
-      console.log('🎤 [ElevenLabs] Convai end event received:', event)
-      if (sessionManagerRef.current) {
-        console.log('✅ [ElevenLabs] Ending call session via event listener')
-        endCallSession()
-      } else {
-        console.warn('⚠️ [ElevenLabs] Cannot end call session - no session manager')
-      }
-    }
-
-    // Listen for ElevenLabs Convai events
-    window.addEventListener('convai-start', handleConvaiStart)
-    window.addEventListener('convai-end', handleConvaiEnd)
-
-    console.log('🎧 [ElevenLabs] Event listeners attached for convai-start and convai-end')
-
+    
+    // Initial check
+    monitorWidgetState()
+    
+    // Also check periodically in case widget loads later
+    const widgetCheckInterval = setInterval(monitorWidgetState, 3000)
+    
     return () => {
-      window.removeEventListener('convai-start', handleConvaiStart)
-      window.removeEventListener('convai-end', handleConvaiEnd)
-      console.log('🧹 [ElevenLabs] Event listeners removed')
+      if (checkInterval) clearInterval(checkInterval)
+      clearInterval(widgetCheckInterval)
+      console.log('🧹 [ElevenLabs] Widget monitoring cleaned up')
     }
-  }, [user])
+  }, [isCallActive, user])
 
   const checkUser = async () => {
     try {
@@ -343,25 +364,25 @@ export default function ReceptionistCallPage() {
           )}
         </motion.div>
 
-        {/* ElevenLabs Convai Widget for Raven */}
-        {type === 'raven' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="glass-card p-4 md:p-6 mb-8"
-          >
-            <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Mistress of Welcome</h2>
-            <div className="text-center">
-              <div className="w-full min-h-[600px] rounded-lg border border-neon-pink/40 overflow-hidden">
-                <elevenlabs-convai 
-                  agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
-                ></elevenlabs-convai>
-                <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-              </div>
-            </div>
-          </motion.div>
-        )}
+                 {/* ElevenLabs Convai Widget for Raven */}
+         {type === 'raven' && (
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.2 }}
+             className="glass-card p-4 md:p-6 mb-8"
+           >
+             <h2 className="text-2xl font-semibold text-white mb-6">Talk to Raven - Your AI Mistress of Welcome</h2>
+             <div className="text-center">
+               <div className="w-full min-h-[600px] rounded-lg border border-neon-pink/40 overflow-hidden">
+                 <elevenlabs-convai 
+                   agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
+                 ></elevenlabs-convai>
+                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+               </div>
+             </div>
+           </motion.div>
+         )}
 
         {/* ElevenLabs Convai Widget for Orion */}
         {type === 'orion' && (
