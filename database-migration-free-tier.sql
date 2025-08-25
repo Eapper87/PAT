@@ -1,29 +1,10 @@
--- Database Migration for Free Tier System
+-- Database Migration for Cleanup
 -- Run this script in your Supabase SQL editor
 
--- Add billing_note field to the calls table
-ALTER TABLE calls 
-ADD COLUMN IF NOT EXISTS billing_note TEXT;
+-- Remove any unused call tracking fields if they exist
+-- (This is optional - only run if you want to clean up old tracking fields)
 
--- Update the status enum to include 'limited' status
--- First, let's check if we need to add the new status
-DO $$ 
-BEGIN
-    -- Check if 'limited' status already exists
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_enum 
-        WHERE enumlabel = 'limited' 
-        AND enumtypid = (SELECT oid FROM pg_type WHERE typname = 'calls_status_enum')
-    ) THEN
-        -- Add 'limited' status to the enum
-        ALTER TYPE calls_status_enum ADD VALUE 'limited';
-    END IF;
-END $$;
-
--- Add comment to document the new field
-COMMENT ON COLUMN calls.billing_note IS 'Billing information and notes for the call';
-
--- Verify the migration
+-- Show current calls table structure
 SELECT 
   column_name, 
   data_type, 
@@ -31,11 +12,7 @@ SELECT
   column_default
 FROM information_schema.columns 
 WHERE table_name = 'calls' 
-AND column_name = 'billing_note'
 ORDER BY ordinal_position;
 
--- Show current status enum values
-SELECT enumlabel 
-FROM pg_enum 
-WHERE enumtypid = (SELECT oid FROM pg_type WHERE typname = 'calls_status_enum')
-ORDER BY enumsortorder;
+-- Note: If you want to completely remove the calls table later, you can run:
+-- DROP TABLE IF EXISTS calls;

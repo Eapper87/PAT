@@ -247,13 +247,13 @@ export default function UsagePage() {
         className="glass-card p-4 mb-8 text-center"
       >
         <div className="text-neon-blue text-lg mb-2">
-          💰 Free Tier System
+          📊 Usage Dashboard
         </div>
         <div className="text-gray-400 text-sm space-y-1">
-          <p>✅ Free tier: 3 minutes maximum per call</p>
-          <p>⏰ Calls automatically end at 3 minutes</p>
-          <p>💳 Premium plans coming soon</p>
-          <p>📊 All usage tracked accurately</p>
+          <p>✅ Simple, clean interface</p>
+          <p>💬 Chat with AI receptionists naturally</p>
+          <p>🔄 No tracking, no limits, just conversation</p>
+          <p>💳 Premium features coming soon</p>
         </div>
       </motion.div>
 
