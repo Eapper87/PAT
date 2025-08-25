@@ -35,6 +35,10 @@ export default function ReceptionPage() {
     }
   }
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    router.push('/')
+  }
 
 
   if (loading) {
@@ -49,34 +53,29 @@ export default function ReceptionPage() {
     <div className="min-h-screen p-6">
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
-        <Link href={isAuthenticated ? "/dashboard" : "/"} className="text-2xl font-cyber font-bold neon-text">
-          ProposalAI
+        <Link href="/" className="text-2xl font-cyber font-bold neon-text">
+          🎙️ ProposalAI
         </Link>
-        <div className="flex items-center space-x-4">
-          {isAuthenticated ? (
+        <div className="flex items-center gap-4">
+          {user ? (
             <>
-              <Link href="/dashboard" className="text-neon-green hover:text-neon-green/80 transition-colors">
+              <Link href="/usage" className="text-gray-300 hover:text-neon-pink transition-colors">
+                📊 Usage
+              </Link>
+              <Link href="/dashboard" className="text-gray-300 hover:text-neon-pink transition-colors">
                 Dashboard
               </Link>
               <button
-                onClick={async () => {
-                  await supabase.auth.signOut()
-                  router.push('/')
-                }}
-                className="text-gray-400 hover:text-white transition-colors"
+                onClick={handleSignOut}
+                className="px-4 py-2 border border-gray-600 text-gray-300 hover:border-neon-pink hover:text-neon-pink transition-colors rounded-lg"
               >
                 Sign Out
               </button>
             </>
           ) : (
-            <>
-              <Link href="/login" className="text-gray-400 hover:text-white transition-colors">
-                Login
-              </Link>
-              <Link href="/signup" className="cyber-button">
-                Sign Up
-              </Link>
-            </>
+            <Link href="/login" className="cyber-button">
+              Sign In
+            </Link>
           )}
         </div>
       </header>

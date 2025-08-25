@@ -361,6 +361,11 @@ export default function EnhancedCallPage() {
             {callSession.trackingMethod === 'auto' && callSession.status === 'active' && (
               <div className="text-xs text-neon-green">Auto-tracking enabled</div>
             )}
+            {callSession.status === 'active' && (
+              <div className="text-xs text-neon-blue mt-1">
+                Session: {callSession.callId?.slice(-8)}
+              </div>
+            )}
           </div>
         </div>
       </header>
