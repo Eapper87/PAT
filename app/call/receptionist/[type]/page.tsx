@@ -166,6 +166,8 @@ export default function EnhancedCallPage() {
   const startCallSession = async (method: 'manual' | 'auto' = 'manual') => {
     if (!user || (callSession.status !== 'idle' && method === 'auto')) return
 
+    console.log('🎬 [Call Page] Starting call session:', { method, userId: user.id, agentId: config.agentId })
+
     setCallSession(prev => ({ 
       ...prev, 
       status: 'starting',
@@ -183,6 +185,7 @@ export default function EnhancedCallPage() {
       })
 
       const data = await response.json()
+      console.log('🎬 [Call Page] API response:', { response: response.ok, data })
 
       if (response.ok) {
         const startTime = Date.now()
@@ -219,6 +222,8 @@ export default function EnhancedCallPage() {
 
   const endCallSession = async (method: 'manual' | 'auto' = 'manual') => {
     if (!callSession.callId || callSession.status !== 'active') return
+
+    console.log('🛑 [Call Page] Ending call session:', { method, callId: callSession.callId, duration: callSession.duration })
 
     const endTime = Date.now()
     const finalDuration = callSession.startTime ? endTime - callSession.startTime : 0
