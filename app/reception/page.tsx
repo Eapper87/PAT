@@ -58,9 +58,6 @@ export default function ReceptionPage() {
               <Link href="/dashboard" className="text-neon-green hover:text-neon-green/80 transition-colors">
                 Dashboard
               </Link>
-              <Link href="/history" className="text-neon-blue hover:text-neon-blue/80 transition-colors">
-                History
-              </Link>
               <button
                 onClick={async () => {
                   await supabase.auth.signOut()
@@ -227,15 +224,15 @@ export default function ReceptionPage() {
             <p className="text-gray-400 mb-6">
               Your seductive AI receptionist is waiting to make all your dreams come true
             </p>
-                         {isAuthenticated ? (
-               <Link href="/escorts" className="cyber-button text-xl px-8 py-4 inline-block">
-                 💋 Browse All Companions
-               </Link>
-             ) : (
-               <Link href="/signup" className="cyber-button text-xl px-8 py-4 inline-block">
-                 🎭 Get Started
-               </Link>
-             )}
+            {isAuthenticated ? (
+              <Link href="/dashboard" className="cyber-button text-xl px-8 py-4 inline-block">
+                🎭 Go to Dashboard
+              </Link>
+            ) : (
+              <Link href="/signup" className="cyber-button text-xl px-8 py-4 inline-block">
+                🎭 Get Started
+              </Link>
+            )}
           </div>
         </motion.div>
       </div>
