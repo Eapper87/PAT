@@ -1,0 +1,10 @@
+[33me553b82[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix Stripe checkout: Update environment variable and fix button loading states
+[33mf81ec48[m Complete escort system: Added 25 escort pages with character files, credit tracking API, and standardized structure
+[33mb45bb99[m feat: implement comprehensive escort category system with advanced filtering
+[33m2a8e55d[m Fix pay-per-minute pricing to encourage subscriptions over one-time purchases
+[33m13d1f17[m Update pay-per-minute pricing and add Coming Soon overlays to credit packages
+[33m22bd48e[m Enhance Nova's description: add 'vibrant' to reception page
+[33mae472a3[m Update footer: remove Support link and update copyright to 2025
+[33md71e485[m Add privacy policy, terms & conditions pages, footer, and Crisp chat support widget
+[33m956bb91[m Fix TypeScript compilation error in landing page features
+[33md9ecc3c[m Update landing page with profile images and frames, add favicon metadata, fix sign out redirects, and remove demo button

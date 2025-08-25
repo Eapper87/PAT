@@ -79,16 +79,24 @@ export default function ReceptionistCallPage() {
 
   useEffect(() => {
     if (user && !sessionManagerRef.current) {
+      console.log('🔧 [Receptionist] Initializing CallSessionManager...', {
+        userId: user.id,
+        timestamp: new Date().toISOString()
+      })
+      
       sessionManagerRef.current = new CallSessionManager(
         user.id,
         handleStatusUpdate,
         handleCallEnded,
         handleError
       )
+      
+      console.log('✅ [Receptionist] CallSessionManager initialized successfully')
     }
 
     return () => {
       if (sessionManagerRef.current) {
+        console.log('🧹 [Receptionist] Cleaning up CallSessionManager...')
         sessionManagerRef.current.destroy()
       }
     }
@@ -98,34 +106,63 @@ export default function ReceptionistCallPage() {
 
   const checkUser = async () => {
     try {
+      console.log('🔍 [Receptionist] Checking user authentication...')
+      
       const { data: { user: authUser }, error } = await supabase.auth.getUser()
       
       if (error || !authUser) {
+        console.error('❌ [Receptionist] User not authenticated:', { error })
         router.push('/login?redirect=reception')
         return
       }
+
+      console.log('✅ [Receptionist] User authenticated:', { 
+        userId: authUser.id, 
+        email: authUser.email 
+      })
 
       setUser(authUser)
       setLoading(false)
 
     } catch (error) {
-      console.error('Error checking user:', error)
+      console.error('💥 [Receptionist] Error checking user:', error)
       router.push('/login')
     }
   }
 
   const startCallSession = async () => {
     try {
-      if (!sessionManagerRef.current) return
+      console.log('🎬 [Receptionist] Starting call session...', {
+        type,
+        userId: user?.id,
+        timestamp: new Date().toISOString()
+      })
+
+      if (!sessionManagerRef.current) {
+        console.error('❌ [Receptionist] No session manager available')
+        return
+      }
 
       // Start call session with receptionist agent ID
-      const session = await sessionManagerRef.current.startCall(`receptionist-${type}`)
+      const agentId = `receptionist-${type}`
+      console.log('🎯 [Receptionist] Using agent ID:', agentId)
+      
+      const session = await sessionManagerRef.current.startCall(agentId)
+      console.log('✅ [Receptionist] Call session started:', session)
+      
       setCallSession(session)
       setCreditsRemaining(session.creditsRemaining)
       setIsCallActive(true)
+      
+      console.log('🎉 [Receptionist] Call session state updated:', {
+        isCallActive: true,
+        creditsRemaining: session.creditsRemaining
+      })
+      
     } catch (error: any) {
-      console.error('Error starting call session:', error)
+      console.error('💥 [Receptionist] Error starting call session:', error)
       if (error.message.includes('Insufficient credits')) {
+        console.log('💰 [Receptionist] Redirecting to pricing due to insufficient credits')
         router.push('/pricing?error=insufficient_credits')
       }
     }
@@ -133,12 +170,21 @@ export default function ReceptionistCallPage() {
 
   const endCallSession = async () => {
     try {
+      console.log('🛑 [Receptionist] Ending call session...', {
+        type,
+        userId: user?.id,
+        timestamp: new Date().toISOString()
+      })
+
       if (sessionManagerRef.current) {
         await sessionManagerRef.current.endCall()
         setIsCallActive(false)
+        console.log('✅ [Receptionist] Call session ended successfully')
+      } else {
+        console.warn('⚠️ [Receptionist] No session manager available for ending call')
       }
     } catch (error) {
-      console.error('Error ending call session:', error)
+      console.error('💥 [Receptionist] Error ending call session:', error)
     }
   }
 
@@ -277,13 +323,24 @@ export default function ReceptionistCallPage() {
                 <elevenlabs-convai 
                   agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
                   onConvaiStart={() => {
+                    console.log('🎤 [ElevenLabs] Convai start event triggered for Raven')
                     if (sessionManagerRef.current && user) {
+                      console.log('✅ [ElevenLabs] Starting call session for Raven')
                       startCallSession()
+                    } else {
+                      console.warn('⚠️ [ElevenLabs] Cannot start call session:', {
+                        hasSessionManager: !!sessionManagerRef.current,
+                        hasUser: !!user
+                      })
                     }
                   }}
                   onConvaiEnd={() => {
+                    console.log('🎤 [ElevenLabs] Convai end event triggered for Raven')
                     if (sessionManagerRef.current) {
+                      console.log('✅ [ElevenLabs] Ending call session for Raven')
                       endCallSession()
+                    } else {
+                      console.warn('⚠️ [ElevenLabs] Cannot end call session - no session manager')
                     }
                   }}
                 ></elevenlabs-convai>
@@ -307,13 +364,24 @@ export default function ReceptionistCallPage() {
                 <elevenlabs-convai 
                   agent-id="agent_8601k3eeze9aftrbtc7twm7xsfa4"
                   onConvaiStart={() => {
+                    console.log('🎤 [ElevenLabs] Convai start event triggered for Orion')
                     if (sessionManagerRef.current && user) {
+                      console.log('✅ [ElevenLabs] Starting call session for Orion')
                       startCallSession()
+                    } else {
+                      console.warn('⚠️ [ElevenLabs] Cannot start call session:', {
+                        hasSessionManager: !!sessionManagerRef.current,
+                        hasUser: !!user
+                      })
                     }
                   }}
                   onConvaiEnd={() => {
+                    console.log('🎤 [ElevenLabs] Convai end event triggered for Orion')
                     if (sessionManagerRef.current) {
+                      console.log('✅ [ElevenLabs] Ending call session for Orion')
                       endCallSession()
+                    } else {
+                      console.warn('⚠️ [ElevenLabs] Cannot end call session - no session manager')
                     }
                   }}
                 ></elevenlabs-convai>
@@ -337,13 +405,24 @@ export default function ReceptionistCallPage() {
                 <elevenlabs-convai 
                   agent-id="agent_0401k3ef8wcvfpmvqvcas62ewkgf"
                   onConvaiStart={() => {
+                    console.log('🎤 [ElevenLabs] Convai start event triggered for Nova')
                     if (sessionManagerRef.current && user) {
+                      console.log('✅ [ElevenLabs] Starting call session for Nova')
                       startCallSession()
+                    } else {
+                      console.warn('⚠️ [ElevenLabs] Cannot start call session:', {
+                        hasSessionManager: !!sessionManagerRef.current,
+                        hasUser: !!user
+                      })
                     }
                   }}
                   onConvaiEnd={() => {
+                    console.log('🎤 [ElevenLabs] Convai end event triggered for Nova')
                     if (sessionManagerRef.current) {
+                      console.log('✅ [ElevenLabs] Ending call session for Nova')
                       endCallSession()
+                    } else {
+                      console.warn('⚠️ [ElevenLabs] Cannot end call session - no session manager')
                     }
                   }}
                 ></elevenlabs-convai>
