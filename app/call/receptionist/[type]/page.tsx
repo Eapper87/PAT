@@ -13,8 +13,6 @@ declare global {
     interface IntrinsicElements {
       'elevenlabs-convai': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
         'agent-id': string
-        'onConvaiStart': () => void
-        'onConvaiEnd': () => void
       }
     }
   }
@@ -102,7 +100,43 @@ export default function ReceptionistCallPage() {
     }
   }, [user])
 
-  // ElevenLabs Convai events are now handled directly by the widget components
+  // Handle ElevenLabs Convai events using proper event listeners
+  useEffect(() => {
+    const handleConvaiStart = (event: any) => {
+      console.log('🎤 [ElevenLabs] Convai start event received:', event)
+      if (sessionManagerRef.current && user) {
+        console.log('✅ [ElevenLabs] Starting call session via event listener')
+        startCallSession()
+      } else {
+        console.warn('⚠️ [ElevenLabs] Cannot start call session:', {
+          hasSessionManager: !!sessionManagerRef.current,
+          hasUser: !!user
+        })
+      }
+    }
+
+    const handleConvaiEnd = (event: any) => {
+      console.log('🎤 [ElevenLabs] Convai end event received:', event)
+      if (sessionManagerRef.current) {
+        console.log('✅ [ElevenLabs] Ending call session via event listener')
+        endCallSession()
+      } else {
+        console.warn('⚠️ [ElevenLabs] Cannot end call session - no session manager')
+      }
+    }
+
+    // Listen for ElevenLabs Convai events
+    window.addEventListener('convai-start', handleConvaiStart)
+    window.addEventListener('convai-end', handleConvaiEnd)
+
+    console.log('🎧 [ElevenLabs] Event listeners attached for convai-start and convai-end')
+
+    return () => {
+      window.removeEventListener('convai-start', handleConvaiStart)
+      window.removeEventListener('convai-end', handleConvaiEnd)
+      console.log('🧹 [ElevenLabs] Event listeners removed')
+    }
+  }, [user])
 
   const checkUser = async () => {
     try {
@@ -322,27 +356,6 @@ export default function ReceptionistCallPage() {
               <div className="w-full min-h-[600px] rounded-lg border border-neon-pink/40 overflow-hidden">
                 <elevenlabs-convai 
                   agent-id="agent_5201k3e7ympbfm0vxskkqz73raa3"
-                  onConvaiStart={() => {
-                    console.log('🎤 [ElevenLabs] Convai start event triggered for Raven')
-                    if (sessionManagerRef.current && user) {
-                      console.log('✅ [ElevenLabs] Starting call session for Raven')
-                      startCallSession()
-                    } else {
-                      console.warn('⚠️ [ElevenLabs] Cannot start call session:', {
-                        hasSessionManager: !!sessionManagerRef.current,
-                        hasUser: !!user
-                      })
-                    }
-                  }}
-                  onConvaiEnd={() => {
-                    console.log('🎤 [ElevenLabs] Convai end event triggered for Raven')
-                    if (sessionManagerRef.current) {
-                      console.log('✅ [ElevenLabs] Ending call session for Raven')
-                      endCallSession()
-                    } else {
-                      console.warn('⚠️ [ElevenLabs] Cannot end call session - no session manager')
-                    }
-                  }}
                 ></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
@@ -363,27 +376,6 @@ export default function ReceptionistCallPage() {
               <div className="w-full min-h-[600px] rounded-lg border border-neon-blue/40 overflow-hidden">
                 <elevenlabs-convai 
                   agent-id="agent_8601k3eeze9aftrbtc7twm7xsfa4"
-                  onConvaiStart={() => {
-                    console.log('🎤 [ElevenLabs] Convai start event triggered for Orion')
-                    if (sessionManagerRef.current && user) {
-                      console.log('✅ [ElevenLabs] Starting call session for Orion')
-                      startCallSession()
-                    } else {
-                      console.warn('⚠️ [ElevenLabs] Cannot start call session:', {
-                        hasSessionManager: !!sessionManagerRef.current,
-                        hasUser: !!user
-                      })
-                    }
-                  }}
-                  onConvaiEnd={() => {
-                    console.log('🎤 [ElevenLabs] Convai end event triggered for Orion')
-                    if (sessionManagerRef.current) {
-                      console.log('✅ [ElevenLabs] Ending call session for Orion')
-                      endCallSession()
-                    } else {
-                      console.warn('⚠️ [ElevenLabs] Cannot end call session - no session manager')
-                    }
-                  }}
                 ></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
@@ -404,27 +396,6 @@ export default function ReceptionistCallPage() {
               <div className="w-full min-h-[600px] rounded-lg border border-neon-green/40 overflow-hidden">
                 <elevenlabs-convai 
                   agent-id="agent_0401k3ef8wcvfpmvqvcas62ewkgf"
-                  onConvaiStart={() => {
-                    console.log('🎤 [ElevenLabs] Convai start event triggered for Nova')
-                    if (sessionManagerRef.current && user) {
-                      console.log('✅ [ElevenLabs] Starting call session for Nova')
-                      startCallSession()
-                    } else {
-                      console.warn('⚠️ [ElevenLabs] Cannot start call session:', {
-                        hasSessionManager: !!sessionManagerRef.current,
-                        hasUser: !!user
-                      })
-                    }
-                  }}
-                  onConvaiEnd={() => {
-                    console.log('🎤 [ElevenLabs] Convai end event triggered for Nova')
-                    if (sessionManagerRef.current) {
-                      console.log('✅ [ElevenLabs] Ending call session for Nova')
-                      endCallSession()
-                    } else {
-                      console.warn('⚠️ [ElevenLabs] Cannot end call session - no session manager')
-                    }
-                  }}
                 ></elevenlabs-convai>
                 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
               </div>
