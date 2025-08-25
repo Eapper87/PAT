@@ -105,78 +105,91 @@ export default function ReceptionistCallPage() {
     console.log('🎧 [ElevenLabs] Setting up widget state monitoring...')
     
     let checkInterval: NodeJS.Timeout
-    let lastWidgetHTML = ''
+    let widgetLoadCheckInterval: NodeJS.Timeout
     
-    const monitorWidgetState = () => {
+    const waitForWidgetToLoad = () => {
       const widget = document.querySelector('elevenlabs-convai')
       if (widget) {
-        console.log('🎤 [ElevenLabs] Widget found, monitoring for call state changes...')
+        // Check if widget has actual content (not just empty shell)
+        const hasContent = widget.children.length > 0 || widget.innerHTML.trim().length > 0
         
-        // Check for active call indicators in the widget
-        const checkCallState = () => {
-          // Debug: Log all elements in the widget to see what's available
-          const allElements = widget.querySelectorAll('*')
-          const elementClasses = Array.from(allElements).map(el => ({
-            tag: el.tagName,
-            classes: Array.from(el.classList),
-            id: el.id,
-            attributes: Array.from(el.attributes).map(attr => `${attr.name}="${attr.value}"`)
-          }))
-          
-          // Look for common call state indicators in the widget
-          const hasActiveCall = widget.querySelector('[data-call-active], .call-active, .recording, .speaking') !== null
-          const hasMicrophoneActive = widget.querySelector('.mic-active, .recording-indicator, [aria-label*="recording"]') !== null
-          const hasAudioPlaying = widget.querySelector('audio[src], .audio-playing, [data-audio-active]') !== null
-          const hasUserSpeaking = widget.querySelector('.user-speaking, .input-active, [data-user-input]') !== null
-          
-          // Check if any call activity is happening
-          const isCallInProgress = hasActiveCall || hasMicrophoneActive || hasAudioPlaying || hasUserSpeaking
-          
-          // Log detailed widget state every 5 seconds for debugging
-          if (Date.now() % 5000 < 1000) {
-            console.log('🔍 [ElevenLabs] Widget debug - Elements found:', elementClasses.length)
-            console.log('🔍 [ElevenLabs] Widget debug - Call indicators:', {
-              hasActiveCall,
-              hasMicrophoneActive,
-              hasAudioPlaying,
-              hasUserSpeaking,
-              isCallInProgress
-            })
-          }
-          
-          if (isCallInProgress) {
-            if (!isCallActive) {
-              console.log('🎬 [ElevenLabs] Call activity detected in widget:', {
-                hasActiveCall,
-                hasMicrophoneActive,
-                hasAudioPlaying,
-                hasUserSpeaking
-              })
-              startCallSession()
-            }
-          } else {
-            if (isCallActive) {
-              console.log('🛑 [ElevenLabs] Call activity ended in widget, ending session...')
-              endCallSession()
-            }
-          }
+        if (hasContent) {
+          console.log('🎉 [ElevenLabs] Widget fully loaded with content, starting monitoring...')
+          clearInterval(widgetLoadCheckInterval)
+          startWidgetMonitoring(widget)
+        } else {
+          console.log('⏳ [ElevenLabs] Widget found but still loading content...')
         }
-        
-        // Check every 1 second for call state changes
-        checkInterval = setInterval(checkCallState, 1000)
-        console.log('✅ [ElevenLabs] Widget monitoring active')
       }
     }
     
-    // Initial check
-    monitorWidgetState()
+    const startWidgetMonitoring = (widget: Element) => {
+      console.log('🎤 [ElevenLabs] Widget monitoring started for loaded widget...')
+      
+      // Check for active call indicators in the widget
+      const checkCallState = () => {
+        // Debug: Log all elements in the widget to see what's available
+        const allElements = widget.querySelectorAll('*')
+        const elementClasses = Array.from(allElements).map(el => ({
+          tag: el.tagName,
+          classes: Array.from(el.classList),
+          id: el.id,
+          attributes: Array.from(el.attributes).map(attr => `${attr.name}="${attr.value}"`)
+        }))
+        
+        // Look for common call state indicators in the widget
+        const hasActiveCall = widget.querySelector('[data-call-active], .call-active, .recording, .speaking') !== null
+        const hasMicrophoneActive = widget.querySelector('.mic-active, .recording-indicator, [aria-label*="recording"]') !== null
+        const hasAudioPlaying = widget.querySelector('audio[src], .audio-playing, [data-audio-active]') !== null
+        const hasUserSpeaking = widget.querySelector('.user-speaking, .input-active, [data-user-input]') !== null
+        
+        // Check if any call activity is happening
+        const isCallInProgress = hasActiveCall || hasMicrophoneActive || hasAudioPlaying || hasUserSpeaking
+        
+        // Log detailed widget state every 5 seconds for debugging
+        if (Date.now() % 5000 < 1000) {
+          console.log('🔍 [ElevenLabs] Widget debug - Elements found:', elementClasses.length)
+          console.log('🔍 [ElevenLabs] Widget debug - Call indicators:', {
+            hasActiveCall,
+            hasMicrophoneActive,
+            hasAudioPlaying,
+            hasUserSpeaking,
+            isCallInProgress
+          })
+        }
+        
+        if (isCallInProgress) {
+          if (!isCallActive) {
+            console.log('🎬 [ElevenLabs] Call activity detected in widget:', {
+              hasActiveCall,
+              hasMicrophoneActive,
+              hasAudioPlaying,
+              hasUserSpeaking
+            })
+            startCallSession()
+          }
+        } else {
+          if (isCallActive) {
+            console.log('🛑 [ElevenLabs] Call activity ended in widget, ending session...')
+            endCallSession()
+          }
+        }
+      }
+      
+      // Check every 1 second for call state changes
+      checkInterval = setInterval(checkCallState, 1000)
+      console.log('✅ [ElevenLabs] Widget monitoring active')
+    }
     
-    // Also check periodically in case widget loads later
-    const widgetCheckInterval = setInterval(monitorWidgetState, 3000)
+    // Wait for widget to load content (check every 500ms)
+    widgetLoadCheckInterval = setInterval(waitForWidgetToLoad, 500)
+    
+    // Also do initial check
+    waitForWidgetToLoad()
     
     return () => {
       if (checkInterval) clearInterval(checkInterval)
-      clearInterval(widgetCheckInterval)
+      if (widgetLoadCheckInterval) clearInterval(widgetLoadCheckInterval)
       console.log('🧹 [ElevenLabs] Widget monitoring cleaned up')
     }
   }, [isCallActive, user])
